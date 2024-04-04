@@ -1,6 +1,8 @@
 import { useTexture } from "@react-three/drei"
-import { RepeatWrapping } from "three"
-import "./shaders/SplattingMaterial"
+import { MeshPhysicalMaterial, RepeatWrapping } from "three"
+import CustomShaderMaterial from 'three-custom-shader-material'
+
+import { vertexShader, fragmentShader } from "./shaders/SplattingMaterial"
 
 export default function Floor() {
 
@@ -10,20 +12,27 @@ export default function Floor() {
   const sand = useTexture("/textures/sand.jpg", (texture) => { texture.wrapS = texture.wrapT = RepeatWrapping })
   const splatMap = useTexture("/textures/splatting.png", (texture) => { texture.wrapS = texture.wrapT = RepeatWrapping })
 
+  const uniforms = {
+    texture1: { value: rock },
+    texture2: { value: grass },
+    texture3: { value: asphalt },
+    texture4: { value: sand },
+    repeatTexture1: { value: [10, 10] },
+    repeatTexture2: { value: [10, 10] },
+    repeatTexture3: { value: [10, 10] },
+    repeatTexture4: { value: [10, 10] },
+    splatMap: { value: splatMap }
+  }
+
   return(
     <>
-      <mesh>
+      <mesh receiveShadow rotation={[-Math.PI/2, 0, 0]} >
         <planeGeometry args={[16, 8]} />
-        <splattingMaterial
-          texture1={rock}
-          texture2={grass}
-          texture3={asphalt}
-          texture4={sand}
-          repeatTexture1={[10, 5]}
-          repeatTexture2={[10, 5]}
-          repeatTexture3={[10, 5]}
-          repeatTexture4={[10, 5]}
-          splatMap={splatMap}
+        <CustomShaderMaterial
+          baseMaterial={MeshPhysicalMaterial}
+          vertexShader={vertexShader}
+          fragmentShader={fragmentShader}
+          uniforms={uniforms}
         />
       </mesh>
     </>

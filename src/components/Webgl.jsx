@@ -6,7 +6,7 @@ import { Perf } from 'r3f-perf'
 export default function Webgl() {
   return (
     <div className='glContainer'>
-      <Canvas gl={{ alpha: false }}>
+      <Canvas gl={{ alpha: false }} shadows>
         <Suspense>
           <Perf/>
           <Scene />
