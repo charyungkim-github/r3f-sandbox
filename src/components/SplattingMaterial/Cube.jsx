@@ -1,4 +1,7 @@
 export default function Cube() {
+
+  console.log("hello");
+
   return(
     <>
       <mesh castShadow position={[0, 2, 0]}>
