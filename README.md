@@ -1,1 +1,1 @@
-# splatting-shader
+# r3f-sandbox
