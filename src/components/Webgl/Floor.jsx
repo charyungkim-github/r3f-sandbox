@@ -2,7 +2,7 @@ import { useTexture } from "@react-three/drei"
 import { MeshPhysicalMaterial, RepeatWrapping } from "three"
 import CustomShaderMaterial from 'three-custom-shader-material'
 
-import { vertexShader, fragmentShader } from "./shaders/SplattingMaterial"
+import { vertex, fragment } from "./shaders/splattingShader"
 
 export default function Floor() {
 
@@ -30,8 +30,8 @@ export default function Floor() {
         <planeGeometry args={[16, 8]} />
         <CustomShaderMaterial
           baseMaterial={MeshPhysicalMaterial}
-          vertexShader={vertexShader}
-          fragmentShader={fragmentShader}
+          vertexShader={vertex}
+          fragmentShader={fragment}
           uniforms={uniforms}
         />
       </mesh>

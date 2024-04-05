@@ -1,8 +1,9 @@
-import { Environment, OrbitControls, PerspectiveCamera } from '@react-three/drei'
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import { useEffect, useRef } from 'react'
 import { Perf } from 'r3f-perf'
-import Floor from './Floor/Floor'
+
 import Cube from './Cube'
+import Floor from './Floor'
 
 export default function Scene() {
 
@@ -17,7 +18,7 @@ export default function Scene() {
     <>
       <Cube />
       <Floor />
-      <directionalLight castShadow intensity={1} position={[-30, 20, -10]} color={'#ffffff'}/>
+      <directionalLight castShadow intensity={1} position={[-10, 20, 5]} color={'#ffffff'}/>
       <ambientLight intensity={1} color={"#e0b270"} />
       <PerspectiveCamera ref={cameraRef} position={[-3, 15, 10.5]} makeDefault />
       <OrbitControls />

@@ -1,4 +1,4 @@
-export const vertexShader = `
+export const vertex = `
     varying vec2 csm_vUv;
     void main() {
         csm_vUv = uv;
@@ -6,7 +6,7 @@ export const vertexShader = `
     }
 `;
 
-export const fragmentShader = `
+export const fragment = `
     uniform sampler2D texture1;
     uniform sampler2D texture2;
     uniform sampler2D texture3;
