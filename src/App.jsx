@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import { Suspense } from 'react'
 
-import Webgl from './components/Webgl/Webgl'
+import Webgl from './components/Common/Webgl'
 import './styles/index.scss'
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
       <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<Webgl page="splatting" />} />
-          <Route path="/pathfinding" element={<Webgl page="pathfinding" />} />
+          <Route path="/navigation" element={<Webgl page="navigation" />} />
         </Routes>
       </Suspense>
     </>
