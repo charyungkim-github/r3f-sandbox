@@ -1,8 +1,11 @@
-import { CatmullRomCurve3, Vector3 } from "three";
-import NavigationInspector from "./NavigationInspector";
 import { useEffect, useRef, forwardRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useAnimations, useGLTF } from "@react-three/drei";
+import { CatmullRomCurve3, Vector3 } from "three";
+
+import NavigationInspector from "./NavigationInspector";
+
+// TODO :: add custom path, pivot controls
 
 export default function NavigationScene() {
 
