@@ -11,6 +11,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Webgl page="splatting" />} />
           <Route path="/navigation" element={<Webgl page="navigation" />} />
+          <Route path="/video" element={<Webgl page="video" />} />
         </Routes>
       </Suspense>
     </>
