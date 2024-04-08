@@ -1,10 +1,9 @@
 import { Perf } from 'r3f-perf'
 
-import Camera from './Camera'
-import Environments from './Environments'
-import DebugInspector from './DebugInspector'
 import SplattingScene from '../SplattingMaterial/SplattingScene'
 import NavigationScene from '../Navigation/NavigationScene'
+import Camera from './Camera'
+import Environments from './Environments'
 
 export default function Scene({ page }) {
 
@@ -13,7 +12,6 @@ export default function Scene({ page }) {
       <Perf position={'top-left'} />
       <Camera page={page} />
       <Environments page={page} />
-      <DebugInspector page={page} />
       { page == "splatting" && <SplattingScene /> }
       { page == "navigation" && <NavigationScene /> }
     </>

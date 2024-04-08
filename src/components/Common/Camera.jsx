@@ -1,11 +1,26 @@
 import { useEffect, useRef } from "react"
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei"
-import useAppStore from "./stores/useAppStore"
+
+import useSplattingStore from "../SplattingMaterial/stores/useSplattingStore"
+import useNavigationStore from "../Navigation/stores/useNavigationStore"
 
 export default function Camera({ page }) {
 
-  const camera = useAppStore( state => state[page].camera )
   const cameraRef = useRef()
+  const splattingCamera = useSplattingStore( state => state.camera )
+  const navigationCamera = useNavigationStore( state => state.camera )
+
+  let camera
+  switch (page) {
+    case 'splatting':
+      camera = splattingCamera
+      break
+    case 'navigation':
+      camera = navigationCamera
+      break
+    default:
+      break
+  }
 
   useEffect(()=> {
     const onKeyDown = (e) => (e.key == "t") && console.log(cameraRef.current.position)

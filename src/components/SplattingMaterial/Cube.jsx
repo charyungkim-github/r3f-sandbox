@@ -1,4 +1,5 @@
 export default function Cube() {
+
   return(
     <>
       <mesh castShadow position={[0, 2, 0]}>

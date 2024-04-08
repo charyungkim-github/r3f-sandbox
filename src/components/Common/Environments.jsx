@@ -1,8 +1,22 @@
-import useAppStore from "./stores/useAppStore"
+import useSplattingStore from "../SplattingMaterial/stores/useSplattingStore"
+import useNavigationStore from "../Navigation/stores/useNavigationStore"
 
 export default function Environments({ page }) {
 
-  const environments = useAppStore( state => state[page].environments )
+  const splattingEnv = useSplattingStore( state => state.environments )
+  const navigationEnv = useNavigationStore( state => state.environments )
+
+  let environments
+  switch (page) {
+    case 'splatting':
+      environments = splattingEnv
+      break
+    case 'navigation':
+      environments = navigationEnv
+      break
+    default:
+      break
+  }
 
   return(
     <>
