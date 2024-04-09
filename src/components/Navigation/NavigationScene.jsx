@@ -7,9 +7,10 @@ import { button, useControls } from "leva"
 import NavigationInspector from "./NavigationInspector"
 import useNavigationStore from "./stores/useNavigationStore"
 
-// TODO :: refactor, clean up
-// TODO :: copy positions
 // TODO :: add debug key
+// TODO :: copy positions
+// TODO :: add, remove pivot
+// TODO :: refactor, clean up
 
 export default function NavigationScene() {
 
