@@ -7,6 +7,8 @@ export default create((set, get) => ({
   environments: {
     dirPosition: [-10, 20, 5],
     ambColor: "#ffffff",
-    bgColor: "#898989",
+    bgColor: "#618683",
   },
+  orbit: true,
+  setOrbit: (_state) => set(() => ({ orbit: _state })),
 }))

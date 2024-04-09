@@ -11,17 +11,22 @@ export default function Camera({ page }) {
   const splattingCamera = useSplattingStore( state => state.camera )
   const navigationCamera = useNavigationStore( state => state.camera )
   const videoCamera = useVideoStore( state => state.camera )
+  const enableOrbit = useNavigationStore( state => state.orbit )
 
   let camera
+  let orbit
   switch (page) {
     case 'splatting':
       camera = splattingCamera
+      orbit = true
       break
     case 'navigation':
       camera = navigationCamera
+      orbit = enableOrbit
       break
     case 'video':
       camera = videoCamera
+      orbit = true
       break
     default:
       break
@@ -36,7 +41,7 @@ export default function Camera({ page }) {
   return(
     <>
       <PerspectiveCamera ref={cameraRef} position={camera.position} makeDefault />
-      <OrbitControls />
+      <OrbitControls enabled={orbit} />
     </>
   )
 }
