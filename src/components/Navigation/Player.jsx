@@ -15,6 +15,10 @@ export default function Player({path, ...props}) {
   const { actions } = useAnimations(animations, group)
 
   useEffect(()=>{
+    if(path) group.current.position.copy(path.points[0])
+  }, [path])
+
+  useEffect(()=>{
     if(movement.status == 'run') {
       actions["Main_Idle"].fadeOut(0.2)
       actions["Main_Run"].reset().fadeIn(0.2).play()

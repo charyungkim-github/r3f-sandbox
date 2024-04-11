@@ -41,19 +41,13 @@ export default function NavigationInspector(props) {
       value: movement.duration,
       onChange: (_value) => updateProperty('movement', 'duration', _value)
     },
-
   }, { collapsed: false })
 
   useControls("Path", {
-    enableLine: {
-      value: path.enableLine,
-      onChange: (_value) => updateProperty('path', 'enableLine', _value)
-    },
     enablePivots: {
       value: path.enablePivots,
       onChange: (_value) => updateProperty('path', 'enablePivots', _value)
     },
-
   }, { collapsed: false })
 
   return null

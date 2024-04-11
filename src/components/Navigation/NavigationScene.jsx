@@ -6,16 +6,17 @@ import Floor from "./Floor"
 import PathController from "./PathController"
 import NavigationInspector from "./NavigationInspector"
 
-// TODO :: add, remove pivot
+// TODO :: remove pivot
+// TODO :: add pivot
 
 export default function NavigationScene() {
 
   const points = [
-    new Vector3(0, 0, 0),
-    new Vector3(-5, 0, 5),
-    new Vector3(-10, 0, 10),
-    new Vector3(10, 0, 10),
-    new Vector3(5, 0, 5),
+    new Vector3(0.93, 0, -6.9),
+    new Vector3(-3.93, 0, 0.96),
+    new Vector3(-9.89, 0, 7.14),
+    new Vector3(3.75, 0, 7.04),
+    new Vector3(10.4, 0, -3.4),
   ]
 
   const [path, setPath] = useState()
@@ -23,7 +24,7 @@ export default function NavigationScene() {
 
   return (
     <>
-      <Player path={path} position={[0, 0, 0]} scale={10} />
+      <Player path={path} scale={10} />
       <Floor position={[0, -0.1, 0]} scale={[30, 0.1, 30]} />
       <PathController initPoints={points} updatePath={onUpdatePath} />
       <NavigationInspector />

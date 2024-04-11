@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 import { PivotControls } from "@react-three/drei"
-import { CatmullRomCurve3, Vector3 } from "three"
+import { CatmullRomCurve3, Color, Vector3 } from "three"
 
 import useNavigationStore from "./stores/useNavigationStore"
 
@@ -10,6 +10,9 @@ export default function PathController({ initPoints, updatePath }) {
   const setOrbit = useNavigationStore( state => state.setOrbit )
   const updatedPoints = useRef(initPoints)
   const geometry = useRef()
+  const pivotControlsRefs = useRef([])
+  const mouseStatus = useRef(false)
+  const selectedPivotIndex = useRef(-1)
 
   useEffect(()=>{ createPath(initPoints) }, [])
 
@@ -36,31 +39,70 @@ export default function PathController({ initPoints, updatePath }) {
 
     // set path
     createPath(newUpdatedPoints)
-
-    // orbit
-    setOrbit(false)
   }
 
+  function onDragStart(index) {
+    // orbit
+    setOrbit(false)
+
+    // pivot color
+    updatePivotColor(selectedPivotIndex.current, "#618683")
+    updatePivotColor(index, "#bde2df")
+
+    // index
+    selectedPivotIndex.current = index
+
+    // status
+    mouseStatus.current = 'pivot-selected'
+  }
+
+  function removePivot() {
+    console.log("remove", selectedPivotIndex.current)
+  }
+
+  // Input Events
   useEffect(()=>{
+    // key events
     const onKeyDown = (e) => {
       if(e.key == 'y') printPoints(updatedPoints.current)
+      if(e.key == "Delete") removePivot()
     }
+    // mouse events
+    const onMouseDown = (e) => {
+      if(mouseStatus.current == 'mouse-down') {
+        updatePivotColor(selectedPivotIndex.current, "#618683")
+        selectedPivotIndex.current = -1
+      }
+      mouseStatus.current = 'mouse-down'
+    }
+
     document.addEventListener('keydown', onKeyDown)
-    return () => document.removeEventListener('keydown', onKeyDown)
+    document.addEventListener('mousedown', onMouseDown)
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      document.removeEventListener('mousedown', onMouseDown)
+    }
   }, [])
+
+  function updatePivotColor(index, color) {
+    if(index >= 0) pivotControlsRefs.current[index].color.set(color)
+  }
 
   return(
     <>
-      <line visible={path.enableLine}>
+      <line visible={path.enablePivots}>
         <bufferGeometry ref={geometry}/>
         <meshBasicMaterial color={"#618683"} />
       </line>
 
       { path.enablePivots && initPoints.map((point, index) => (
-          <PivotControls key={index} onDrag={(e)=>onDrag(e, index)} onDragEnd={()=>setOrbit(true)} anchor={[0, 0, 0]} disableRotations disableScaling lineWidth={1}>
-            <mesh position={[point.x, point.y, point.z]} scale={0.1}>
+          <PivotControls key={index} anchor={[0, 0, 0]} lineWidth={1} disableRotations disableScaling
+            onDrag={ (e)=>onDrag(e, index) }
+            onDragStart={ ()=>onDragStart(index) }
+            onDragEnd={ ()=>setOrbit(true) }>
+            <mesh position={[point.x, point.y, point.z]} scale={0.3}>
               <boxGeometry />
-              <meshBasicMaterial color={'#618683'} />
+              <meshBasicMaterial ref={ref => pivotControlsRefs.current[index] = ref} color={'#618683'} />
             </mesh>
           </PivotControls>
       )) }
@@ -69,9 +111,8 @@ export default function PathController({ initPoints, updatePath }) {
 }
 
 function printPoints(points) {
-  console.log(points);
   let val = 'const points = [\n'
   points.map( point => val += `  new Vector3(${point.x}, ${point.y}, ${point.z}),\n` )
   val += ']'
-  console.log(val);
+  console.log(val)
 }
