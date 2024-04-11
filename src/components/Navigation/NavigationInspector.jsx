@@ -6,6 +6,8 @@ export default function NavigationInspector(props) {
 
   const camera = useNavigationStore( state => state.camera )
   const environments = useNavigationStore( state => state.environments )
+  const movement = useNavigationStore( state => state.movement )
+  const path = useNavigationStore( state => state.path )
 
   useControls("Camera", {
     position: {
@@ -28,6 +30,32 @@ export default function NavigationInspector(props) {
       onChange: (_value) => updateProperty('environments', 'bgColor', _value)
     },
   }, { collapsed: true })
+
+  useControls("Movement", {
+    status: {
+      value: movement.status,
+      options: ["idle", "run"],
+      onChange: (_value) => updateProperty('movement', 'status', _value)
+    },
+    duration: {
+      value: movement.duration,
+      onChange: (_value) => updateProperty('movement', 'duration', _value)
+    },
+
+  }, { collapsed: false })
+
+  useControls("Path", {
+    enableLine: {
+      value: path.enableLine,
+      onChange: (_value) => updateProperty('path', 'enableLine', _value)
+    },
+    enablePivots: {
+      value: path.enablePivots,
+      onChange: (_value) => updateProperty('path', 'enablePivots', _value)
+    },
+
+  }, { collapsed: false })
+
   return null
 }
 

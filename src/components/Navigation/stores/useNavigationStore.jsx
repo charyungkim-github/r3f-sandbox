@@ -9,6 +9,16 @@ export default create((set, get) => ({
     ambColor: "#ffffff",
     bgColor: "#618683",
   },
+  // path
   orbit: true,
   setOrbit: (_state) => set(() => ({ orbit: _state })),
+  // movement
+  movement: {
+    status: 'idle',
+    duration: 20,
+  },
+  path: {
+    enableLine: true,
+    enablePivots: true,
+  }
 }))
