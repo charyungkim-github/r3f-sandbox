@@ -29,6 +29,7 @@ export default function Camera({ page }) {
       orbit = true
       break
     default:
+      camera = null
       break
   }
 
@@ -38,7 +39,7 @@ export default function Camera({ page }) {
     return() => document.removeEventListener('keydown', onKeyDown)
   }, [])
 
-  if(page == 'test') return
+  if(!camera) return
   return(
     <>
       <PerspectiveCamera ref={cameraRef} position={camera.position} makeDefault />

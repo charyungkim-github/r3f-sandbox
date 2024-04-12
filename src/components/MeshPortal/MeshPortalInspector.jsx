@@ -1,11 +1,11 @@
 import { useControls } from 'leva'
 
-import useTestStore from './stores/useTestStore'
+import useMeshPortalStore from './stores/useMeshPortalStore'
 
-export default function TestInspector(props) {
+export default function MeshPortalInspector(props) {
 
-  const environments = useTestStore( state => state.environments )
-  const parallax = useTestStore( state => state.parallax )
+  const environments = useMeshPortalStore( state => state.environments )
+  const parallax = useMeshPortalStore( state => state.parallax )
 
   useControls("Environments", {
     dirPosition: {
@@ -37,7 +37,7 @@ export default function TestInspector(props) {
 }
 
 function updateProperty(key, property, value) {
-  useTestStore.setState((state) => ({
+  useMeshPortalStore.setState((state) => ({
     [key]: {
       ...state[key],
       [property]: value,

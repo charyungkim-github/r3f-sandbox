@@ -3,10 +3,10 @@ import { Perf } from 'r3f-perf'
 import SplattingScene from '../SplattingMaterial/SplattingScene'
 import NavigationScene from '../Navigation/NavigationScene'
 import VideoScene from '../Video/VideoScene'
+import MeshPortalScene from '../MeshPortal/MeshPortalScene'
 
 import Camera from './Camera'
 import Environments from './Environments'
-import TestScene from '../Test/TestScene'
 
 export default function Scene({ page }) {
 
@@ -18,7 +18,7 @@ export default function Scene({ page }) {
       { page == "splatting" && <SplattingScene /> }
       { page == "navigation" && <NavigationScene /> }
       { page == "video" && <VideoScene /> }
-      { page == "test" && <TestScene /> }
+      { page == "meshportal" && <MeshPortalScene /> }
     </>
   )
 }

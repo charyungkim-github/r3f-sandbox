@@ -1,14 +1,14 @@
 import useSplattingStore from "../SplattingMaterial/stores/useSplattingStore"
 import useNavigationStore from "../Navigation/stores/useNavigationStore"
 import useVideoStore from "../Video/stores/useVideoStore"
-import useTestStore from "../Test/stores/useTestStore"
+import useMeshPortalStore from "../MeshPortal/stores/useMeshPortalStore"
 
 export default function Environments({ page }) {
 
   const splattingEnv = useSplattingStore( state => state.environments )
   const navigationEnv = useNavigationStore( state => state.environments )
   const videonEnv = useVideoStore( state => state.environments )
-  const testEnv = useTestStore( state => state.environments )
+  const meshPortalEnv = useMeshPortalStore( state => state.environments )
 
   let environments
   switch (page) {
@@ -21,8 +21,8 @@ export default function Environments({ page }) {
     case 'video':
       environments = videonEnv
       break
-    case 'test':
-      environments = testEnv
+    case 'meshportal':
+      environments = meshPortalEnv
       break
     default:
       break

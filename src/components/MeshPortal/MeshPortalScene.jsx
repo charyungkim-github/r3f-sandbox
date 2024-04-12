@@ -3,10 +3,10 @@ import { useFrame, useThree } from "@react-three/fiber"
 import { useGLTF, MeshPortalMaterial, Environment, OrbitControls } from "@react-three/drei"
 import { MathUtils } from "three"
 
-import TestInspector from "./TestInspector"
-import useTestStore from "./stores/useTestStore"
+import MeshPortalInspector from "./MeshPortalInspector"
+import useMeshPortalStore from "./stores/useMeshPortalStore"
 
-export default function TestScene() {
+export default function MeshPortalScene() {
 
   return (
     <>
@@ -33,14 +33,14 @@ export default function TestScene() {
       </mesh>
 
       <Camera enableParallax={false} enableOrbit={true} />
-      <TestInspector />
+      <MeshPortalInspector />
     </>
   )
 }
 
 function Camera({ enableParallax, enableOrbit }) {
-  const cameraPosition  = useTestStore( state => state.camera.position )
-  const parallax  = useTestStore( state => state.parallax )
+  const cameraPosition  = useMeshPortalStore( state => state.camera.position )
+  const parallax  = useMeshPortalStore( state => state.parallax )
 
   const { camera }  = useThree()
 
