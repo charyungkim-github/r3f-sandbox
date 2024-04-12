@@ -33,8 +33,7 @@ export default function Camera({ page }) {
   }
 
   useEffect(()=> {
-    if(page == 'test') return
-    const onKeyDown = (e) => (e.key == "t") && console.log(cameraRef.current.position)
+    const onKeyDown = (e) => (e.key == "t") && cameraRef.current && console.log(cameraRef.current.position)
     document.addEventListener('keydown', onKeyDown)
     return() => document.removeEventListener('keydown', onKeyDown)
   }, [])
