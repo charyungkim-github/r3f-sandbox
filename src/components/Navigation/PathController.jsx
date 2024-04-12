@@ -1,13 +1,18 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { PivotControls } from "@react-three/drei"
-import { CatmullRomCurve3, Color, Vector3 } from "three"
+import { CatmullRomCurve3, Vector3 } from "three"
 
 import useNavigationStore from "./stores/useNavigationStore"
+
+const enabledColor = "#bde2df"
+const disabledColor = "#618683"
 
 export default function PathController({ initPoints, updatePath }) {
 
   const path = useNavigationStore( state => state.path )
   const setOrbit = useNavigationStore( state => state.setOrbit )
+
+  const [copiedInitPoints, setCopiedInitPoints] = useState(initPoints)
   const updatedPoints = useRef(initPoints)
   const geometry = useRef()
   const pivotControlsRefs = useRef([])
@@ -32,9 +37,9 @@ export default function PathController({ initPoints, updatePath }) {
     // update points
     const newUpdatedPoints = [...updatedPoints.current]
     newUpdatedPoints[index] = new Vector3(
-      parseFloat( (initPoints[index].x + handlePosition.x).toFixed(2) ),
-      parseFloat( (initPoints[index].y + handlePosition.y).toFixed(2) ),
-      parseFloat( (initPoints[index].z + handlePosition.z).toFixed(2) )
+      parseFloat( (copiedInitPoints[index].x + handlePosition.x).toFixed(2) ),
+      parseFloat( (copiedInitPoints[index].y + handlePosition.y).toFixed(2) ),
+      parseFloat( (copiedInitPoints[index].z + handlePosition.z).toFixed(2) )
     )
 
     // set path
@@ -46,8 +51,8 @@ export default function PathController({ initPoints, updatePath }) {
     setOrbit(false)
 
     // pivot color
-    updatePivotColor(selectedPivotIndex.current, "#618683")
-    updatePivotColor(index, "#bde2df")
+    updatePivotColor(selectedPivotIndex.current, disabledColor)
+    updatePivotColor(index, enabledColor)
 
     // index
     selectedPivotIndex.current = index
@@ -57,7 +62,9 @@ export default function PathController({ initPoints, updatePath }) {
   }
 
   function removePivot() {
-    console.log("remove", selectedPivotIndex.current)
+    updatedPoints.current.splice(selectedPivotIndex.current, 1)
+    createPath(updatedPoints.current, true)
+    setCopiedInitPoints([...updatedPoints.current])
   }
 
   // Input Events
@@ -70,7 +77,7 @@ export default function PathController({ initPoints, updatePath }) {
     // mouse events
     const onMouseDown = (e) => {
       if(mouseStatus.current == 'mouse-down') {
-        updatePivotColor(selectedPivotIndex.current, "#618683")
+        updatePivotColor(selectedPivotIndex.current, disabledColor)
         selectedPivotIndex.current = -1
       }
       mouseStatus.current = 'mouse-down'
@@ -92,17 +99,17 @@ export default function PathController({ initPoints, updatePath }) {
     <>
       <line visible={path.enablePivots}>
         <bufferGeometry ref={geometry}/>
-        <meshBasicMaterial color={"#618683"} />
+        <meshBasicMaterial color={disabledColor} />
       </line>
 
-      { path.enablePivots && initPoints.map((point, index) => (
+      { path.enablePivots && copiedInitPoints.map((point, index) => (
           <PivotControls key={index} anchor={[0, 0, 0]} lineWidth={1} disableRotations disableScaling
             onDrag={ (e)=>onDrag(e, index) }
             onDragStart={ ()=>onDragStart(index) }
             onDragEnd={ ()=>setOrbit(true) }>
             <mesh position={[point.x, point.y, point.z]} scale={0.3}>
               <boxGeometry />
-              <meshBasicMaterial ref={ref => pivotControlsRefs.current[index] = ref} color={'#618683'} />
+              <meshBasicMaterial ref={ref => pivotControlsRefs.current[index] = ref} color={disabledColor} />
             </mesh>
           </PivotControls>
       )) }
