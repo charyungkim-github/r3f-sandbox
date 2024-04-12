@@ -1,6 +1,6 @@
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useFrame, useThree } from "@react-three/fiber"
-import { useGLTF, MeshPortalMaterial, Environment, OrbitControls, PerspectiveCamera } from "@react-three/drei"
+import { useGLTF, MeshPortalMaterial, Environment, OrbitControls } from "@react-three/drei"
 import { MathUtils } from "three"
 
 import TestInspector from "./TestInspector"
@@ -38,33 +38,6 @@ export default function TestScene() {
   )
 }
 
-function Side({ rotation, bg, children, index }) {
-  return (
-    <MeshPortalMaterial worldUnits={false} attach={`material-${index}`}>
-      <ambientLight intensity={3} />
-      <Environment preset="city" />
-      <Model rotation={rotation} color={bg} />
-      <mesh castShadow receiveShadow scale={0.8}>
-        {children}
-        <meshPhysicalMaterial color={bg} />
-      </mesh>
-    </MeshPortalMaterial>
-  )
-}
-
-function Model(props) {
-  const { nodes } = useGLTF("/models/aobox.glb")
-  return (
-    <group {...props} dispose={null}>
-      <mesh geometry={nodes.Cube.geometry}>
-        <meshStandardMaterial aoMapIntensity={1} aoMap={nodes.Cube.material.aoMap} color={props.color} />
-      </mesh>
-    </group>
-  )
-}
-
-useGLTF.preload("/models/aobox.glb")
-
 function Camera({ enableParallax, enableOrbit }) {
   const cameraPosition  = useTestStore( state => state.camera.position )
   const parallax  = useTestStore( state => state.parallax )
@@ -90,17 +63,48 @@ function Camera({ enableParallax, enableOrbit }) {
   })
 
   return(
-    <>
-      { enableOrbit && <OrbitControls makeDefault /> }
-    </>
+    <OrbitControls enabled={enableOrbit} />
   )
 }
 
-function DodecahedronGeometry(props) {
+function Side({ rotation, bg, children, index }) {
+  return (
+    <MeshPortalMaterial worldUnits={false} attach={`material-${index}`}>
+      <ambientLight intensity={3} />
+      <Environment preset="city" />
+      <Model rotation={rotation} color={bg} />
+      <Shape scale={0.8} color={bg}>
+        {children}
+      </Shape>
+    </MeshPortalMaterial>
+  )
+}
+
+function Shape({children, color, ...props}) {
+
+  const mesh = useRef()
+
+  useFrame((state, delta) => {
+    mesh.current.rotation.x = mesh.current.rotation.y += delta
+  })
+
   return(
-    <mesh {...props}>
-      <dodecahedronGeometry />
-      <meshPhysicalMaterial color={props.color}/>
+    <mesh ref={mesh} {...props}>
+      {children}
+      <meshPhysicalMaterial color={color} />
     </mesh>
   )
 }
+
+function Model(props) {
+  const { nodes } = useGLTF("/models/aobox.glb")
+  return (
+    <group {...props} dispose={null}>
+      <mesh geometry={nodes.Cube.geometry}>
+        <meshStandardMaterial aoMapIntensity={1} aoMap={nodes.Cube.material.aoMap} color={props.color} />
+      </mesh>
+    </group>
+  )
+}
+
+useGLTF.preload("/models/aobox.glb")
