@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useFrame, useThree } from "@react-three/fiber"
-import { useGLTF, MeshPortalMaterial, Environment, OrbitControls } from "@react-three/drei"
+import { useGLTF, MeshPortalMaterial, Environment, OrbitControls, PerspectiveCamera } from "@react-three/drei"
 import { MathUtils } from "three"
 
 import TestInspector from "./TestInspector"
@@ -10,7 +10,7 @@ export default function TestScene() {
 
   return (
     <>
-      <mesh>
+      <mesh scale={1.5}>
         <boxGeometry args={[2, 2, 2]} />
         <Side rotation={[0, 0, 0]} bg="orange" index={0}>
           <torusGeometry args={[0.65, 0.3, 64]} />
@@ -38,14 +38,13 @@ export default function TestScene() {
   )
 }
 
-
 function Side({ rotation, bg, children, index }) {
   return (
     <MeshPortalMaterial worldUnits={false} attach={`material-${index}`}>
       <ambientLight intensity={3} />
       <Environment preset="city" />
       <Model rotation={rotation} color={bg} />
-      <mesh castShadow receiveShadow>
+      <mesh castShadow receiveShadow scale={0.8}>
         {children}
         <meshPhysicalMaterial color={bg} />
       </mesh>
@@ -67,11 +66,19 @@ function Model(props) {
 useGLTF.preload("/models/aobox.glb")
 
 function Camera({ enableParallax, enableOrbit }) {
+  const cameraPosition  = useTestStore( state => state.camera.position )
   const parallax  = useTestStore( state => state.parallax )
+
   const { camera }  = useThree()
 
   useEffect(()=>{
-    camera.position.z = 7
+    camera.position.set(cameraPosition[0], cameraPosition[1], cameraPosition[2])
+  }, [])
+
+  useEffect(()=> {
+    const onKeyDown = (e) => (e.key == "t") && console.log(camera.position)
+    document.addEventListener('keydown', onKeyDown)
+    return() => document.removeEventListener('keydown', onKeyDown)
   }, [])
 
   useFrame((state) => {
