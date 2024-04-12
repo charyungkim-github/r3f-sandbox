@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useFrame, useThree } from "@react-three/fiber"
-import { useGLTF, MeshPortalMaterial, Environment, PerspectiveCamera, OrbitControls } from "@react-three/drei"
+import { useGLTF, MeshPortalMaterial, Environment, OrbitControls } from "@react-three/drei"
 import { MathUtils } from "three"
 
 import TestInspector from "./TestInspector"
@@ -10,28 +10,61 @@ export default function TestScene() {
 
   return (
     <>
-      <Frame scale={[3, 3, 3]} position-z={-1}>
-        <ambientLight intensity={3}/>
-        <Environment preset="city"/>
-        <Model scale={1.5} rotation-y={-Math.PI/2} position-z={-1} color='orange' />
-        <DodecahedronGeometry position-z={-1} color='orange' />
-      </Frame>
-      <Camera enableParallax={true} enableOrbit={false} />
+      <mesh>
+        <boxGeometry args={[2, 2, 2]} />
+        <Side rotation={[0, 0, 0]} bg="orange" index={0}>
+          <torusGeometry args={[0.65, 0.3, 64]} />
+        </Side>
+        <Side rotation={[0, Math.PI, 0]} bg="lightblue" index={1}>
+          <torusKnotGeometry args={[0.55, 0.2, 128, 32]} />
+        </Side>
+        <Side rotation={[0, Math.PI / 2, Math.PI / 2]} bg="lightgreen" index={2}>
+          <boxGeometry args={[1.15, 1.15, 1.15]} />
+        </Side>
+        <Side rotation={[0, Math.PI / 2, -Math.PI / 2]} bg="aquamarine" index={3}>
+          <octahedronGeometry />
+        </Side>
+        <Side rotation={[0, -Math.PI / 2, 0]} bg="indianred" index={4}>
+          <icosahedronGeometry />
+        </Side>
+        <Side rotation={[0, Math.PI / 2, 0]} bg="hotpink" index={5}>
+          <dodecahedronGeometry />
+        </Side>
+      </mesh>
+
+      <Camera enableParallax={false} enableOrbit={true} />
       <TestInspector />
     </>
   )
 }
 
-function Frame({children, ...props}) {
-  return(
-    <mesh {...props}>
-      <boxGeometry args={[1, 1, 1]} />
-      <MeshPortalMaterial worldUnits={true}>
+
+function Side({ rotation, bg, children, index }) {
+  return (
+    <MeshPortalMaterial worldUnits={false} attach={`material-${index}`}>
+      <ambientLight intensity={3} />
+      <Environment preset="city" />
+      <Model rotation={rotation} color={bg} />
+      <mesh castShadow receiveShadow>
         {children}
-      </MeshPortalMaterial>
-    </mesh>
+        <meshPhysicalMaterial color={bg} />
+      </mesh>
+    </MeshPortalMaterial>
   )
 }
+
+function Model(props) {
+  const { nodes } = useGLTF("/models/aobox.glb")
+  return (
+    <group {...props} dispose={null}>
+      <mesh geometry={nodes.Cube.geometry}>
+        <meshStandardMaterial aoMapIntensity={1} aoMap={nodes.Cube.material.aoMap} color={props.color} />
+      </mesh>
+    </group>
+  )
+}
+
+useGLTF.preload("/models/aobox.glb")
 
 function Camera({ enableParallax, enableOrbit }) {
   const parallax  = useTestStore( state => state.parallax )
@@ -51,7 +84,7 @@ function Camera({ enableParallax, enableOrbit }) {
 
   return(
     <>
-      { enableOrbit && <OrbitControls /> }
+      { enableOrbit && <OrbitControls makeDefault /> }
     </>
   )
 }
@@ -64,17 +97,3 @@ function DodecahedronGeometry(props) {
     </mesh>
   )
 }
-
-function Model(props) {
-  const { nodes, materials } = useGLTF("/models/aobox.glb")
-  useEffect(()=>{
-    materials.Material.color.set(props.color)
-  }, [])
-  return (
-    <group {...props} dispose={null}>
-      <mesh geometry={nodes.Cube.geometry} material={materials.Material} />
-    </group>
-  )
-}
-
-useGLTF.preload("/models/aobox.glb")
