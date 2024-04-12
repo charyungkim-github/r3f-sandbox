@@ -38,6 +38,7 @@ export default function Camera({ page }) {
     return() => document.removeEventListener('keydown', onKeyDown)
   }, [])
 
+  if(page == 'test') return
   return(
     <>
       <PerspectiveCamera ref={cameraRef} position={camera.position} makeDefault />

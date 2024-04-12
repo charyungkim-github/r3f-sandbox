@@ -6,6 +6,7 @@ import VideoScene from '../Video/VideoScene'
 
 import Camera from './Camera'
 import Environments from './Environments'
+import TestScene from '../Test/TestScene'
 
 export default function Scene({ page }) {
 
@@ -17,6 +18,7 @@ export default function Scene({ page }) {
       { page == "splatting" && <SplattingScene /> }
       { page == "navigation" && <NavigationScene /> }
       { page == "video" && <VideoScene /> }
+      { page == "test" && <TestScene /> }
     </>
   )
 }
