@@ -12,13 +12,13 @@ export default function WallClippingInspector(props) {
       value: camera.position,
       onChange: (_value) => updateProperty('camera', 'position', _value)
     },
-    offset: {
-      value: camera.offset,
-      onChange: (_value) => updateProperty('camera', 'offset', _value)
+    dollySpeed: {
+      value: camera.dollySpeed,
+      onChange: (_value) => updateProperty('camera', 'dollySpeed', _value)
     },
-    lookAt: {
-      value: camera.lookAt,
-      onChange: (_value) => updateProperty('camera', 'lookAt', _value)
+    truckSpeed: {
+      value: camera.truckSpeed,
+      onChange: (_value) => updateProperty('camera', 'truckSpeed', _value)
     },
   }, { collapsed: true })
 

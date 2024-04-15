@@ -28,11 +28,11 @@ export default function Map(props) {
         <mesh geometry={nodes.SKH_05_Extra.geometry} material={materials.SKH_Tex_00_Extra_s} rotation={[Math.PI / 2, 0, 0]} scale={0.01} />
         <group rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
           <mesh geometry={nodes.Mesh007.geometry} material={materials.SKH_Tex_00_StreetBlock_s} material-clipping={false} />
-          <mesh geometry={nodes.Mesh007_1.geometry} material={materials.SKH_Tile_06_s} />
-          <mesh geometry={nodes.Mesh007_2.geometry} material={materials.SKH_Tile_01_s} />
-          <mesh geometry={nodes.Mesh007_3.geometry} material={materials.SKH_Tile_02_s} />
-          <mesh geometry={nodes.Mesh007_4.geometry} material={materials.SKH_Tile_08_s} />
-          <mesh geometry={nodes.Mesh007_5.geometry} material={materials.SKH_Tile_07_s} />
+          <mesh geometry={nodes.Mesh007_1.geometry} material={materials.SKH_Tile_06_s} material-clipping={false} />
+          <mesh geometry={nodes.Mesh007_2.geometry} material={materials.SKH_Tile_01_s} material-clipping={false} />
+          <mesh geometry={nodes.Mesh007_3.geometry} material={materials.SKH_Tile_02_s} material-clipping={false} />
+          <mesh geometry={nodes.Mesh007_4.geometry} material={materials.SKH_Tile_08_s} material-clipping={false} />
+          <mesh geometry={nodes.Mesh007_5.geometry} material={materials.SKH_Tile_07_s} material-clipping={false} />
         </group>
         <group rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
           <mesh geometry={nodes.Mesh010.geometry} material={materials.SKH_Movie_01_s} />

@@ -1,12 +1,8 @@
 import { useEffect, useRef } from "react"
 import { CameraControls, PerspectiveCamera, useKeyboardControls } from "@react-three/drei"
-import { Vector3 } from "three"
-
-import useWallClippingStore from "./stores/useWallClippingStore"
 import { useFrame } from "@react-three/fiber"
 
-const dirVector = new Vector3(0, 0, 0)
-const cameraSpeed = 1.5
+import useWallClippingStore from "./stores/useWallClippingStore"
 
 export default function Camera(props) {
   const camera = useWallClippingStore( state => state.camera )
@@ -21,9 +17,13 @@ export default function Camera(props) {
 
     if(logCamera) console.log(cameraRef.current.position)
     if(!forward && !backward && !left && !right && !up && !down) return
-    const { position, rotation } = cameraRef.current
-    dirVector.set(left - right, up - down, backward - forward).normalize().multiplyScalar(cameraSpeed).applyEuler(rotation)
-    controlsRef.current.setPosition(position.x + dirVector.x, position.y + dirVector.y, position.z + dirVector.z, true)
+
+    const x = right - left
+    const y = up - down
+    const z = forward - backward
+
+    controlsRef.current.truck(x * camera.truckSpeed, y * camera.truckSpeed, false)
+    controlsRef.current.dolly(z * camera.dollySpeed, false)
   })
 
   useEffect(()=>{
