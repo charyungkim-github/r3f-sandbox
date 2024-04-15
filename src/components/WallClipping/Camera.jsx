@@ -5,14 +5,16 @@ import { useFrame } from "@react-three/fiber"
 import useWallClippingStore from "./stores/useWallClippingStore"
 
 export default function Camera(props) {
-  const camera = useWallClippingStore( state => state.camera )
+
+  const controls = useWallClippingStore( state => state.controls )
   const [, get] = useKeyboardControls()
 
   const cameraRef = useRef()
   const controlsRef = useRef()
 
-  useFrame((state, delta)=> {
+  useFrame(()=> {
 
+    if(!controls.enable) return
     const { forward, backward, left, right, up, down, logCamera } = get()
 
     if(logCamera) console.log(cameraRef.current.position)
@@ -21,19 +23,23 @@ export default function Camera(props) {
     const x = right - left
     const y = up - down
     const z = forward - backward
+    const transition = false
 
-    controlsRef.current.truck(x * camera.truckSpeed, y * camera.truckSpeed, false)
-    controlsRef.current.dolly(z * camera.dollySpeed, false)
+    controlsRef.current.truck(x * controls.truckSpeed, y * controls.truckSpeed, transition)
+    controlsRef.current.dolly(z * controls.dollySpeed, transition)
   })
 
   useEffect(()=>{
-    controlsRef.current.setPosition(camera.position[0], camera.position[1], camera.position[2], true)
-  }, [camera.position])
+    controlsRef.current.setPosition(controls.position[0], controls.position[1], controls.position[2], true)
+  }, [controls.position])
 
-  return(
+  return (
     <>
-      <PerspectiveCamera ref={cameraRef} position={camera.position} fov={camera.fov} near={camera.near} far={camera.far} makeDefault />
-      <CameraControls ref={controlsRef} />
+      { controls.enable &&
+        <>
+          <PerspectiveCamera ref={cameraRef} position={controls.position} fov={controls.fov} near={controls.near} far={controls.far} makeDefault />
+          <CameraControls ref={controlsRef} />
+        </> }
     </>
   )
 }

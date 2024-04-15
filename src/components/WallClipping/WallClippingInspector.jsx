@@ -5,20 +5,36 @@ import useWallClippingStore from './stores/useWallClippingStore'
 export default function WallClippingInspector(props) {
 
   const camera = useWallClippingStore( state => state.camera )
+  const controls = useWallClippingStore( state => state.controls )
   const environments = useWallClippingStore( state => state.environments )
 
   useControls("Camera", {
+    offset: {
+      value: camera.offset,
+      onChange: (_value) => updateProperty('camera', 'offset', _value)
+    },
+    lookAt: {
+      value: camera.lookAt,
+      onChange: (_value) => updateProperty('camera', 'lookAt', _value)
+    },
+  }, { collapsed: true })
+
+  useControls("Controls", {
+    enable: {
+      value: controls.enable,
+      onChange: (_value) => updateProperty('controls', 'enable', _value)
+    },
     position: {
-      value: camera.position,
-      onChange: (_value) => updateProperty('camera', 'position', _value)
+      value: controls.position,
+      onChange: (_value) => updateProperty('controls', 'position', _value)
     },
     dollySpeed: {
-      value: camera.dollySpeed,
-      onChange: (_value) => updateProperty('camera', 'dollySpeed', _value)
+      value: controls.dollySpeed,
+      onChange: (_value) => updateProperty('controls', 'dollySpeed', _value)
     },
     truckSpeed: {
-      value: camera.truckSpeed,
-      onChange: (_value) => updateProperty('camera', 'truckSpeed', _value)
+      value: controls.truckSpeed,
+      onChange: (_value) => updateProperty('controls', 'truckSpeed', _value)
     },
   }, { collapsed: true })
 

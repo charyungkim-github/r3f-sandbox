@@ -2,14 +2,20 @@ import { create } from 'zustand'
 
 export default create((set, get) => ({
   camera: {
-    position: [-1.5, 4, -10],
+    offset: [0, 0, 0],
+    lookAt: [0, 0, 0],
     fov: 60,
     near: 0.2,
     far: 1000,
-    offset: [0, 1, -6],
-    lookAt: [0, 0, 0],
-    dollySpeed: 0.2,
-    truckSpeed: 0.2,
+  },
+  controls: {
+    enable: true,
+    position: [-37, 14, 46],
+    fov: 60,
+    near: 0.2,
+    far: 1000,
+    dollySpeed: 0.3,
+    truckSpeed: 0.3,
     minPolarAngle: -Infinity,
     maxPolarAngle: Infinity,
   },
