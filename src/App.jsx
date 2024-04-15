@@ -13,6 +13,7 @@ function App() {
           <Route path="/navigation" element={<Webgl page="navigation" />} />
           <Route path="/video" element={<Webgl page="video" />} />
           <Route path="/meshportal" element={<Webgl page="meshportal" />} />
+          <Route path="/wallclipping" element={<Webgl page="wallclipping" />} />
         </Routes>
       </Suspense>
     </>

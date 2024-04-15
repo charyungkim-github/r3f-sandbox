@@ -4,6 +4,7 @@ import SplattingScene from '../SplattingMaterial/SplattingScene'
 import NavigationScene from '../Navigation/NavigationScene'
 import VideoScene from '../Video/VideoScene'
 import MeshPortalScene from '../MeshPortal/MeshPortalScene'
+import WallClippingScene from '../WallClipping/WallClippingScene'
 
 import Camera from './Camera'
 import Environments from './Environments'
@@ -19,6 +20,7 @@ export default function Scene({ page }) {
       { page == "navigation" && <NavigationScene /> }
       { page == "video" && <VideoScene /> }
       { page == "meshportal" && <MeshPortalScene /> }
+      { page == "wallclipping" && <WallClippingScene /> }
     </>
   )
 }
