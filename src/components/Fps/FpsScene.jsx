@@ -1,5 +1,5 @@
-import { KeyboardControls, PerspectiveCamera, PointerLockControls, useGLTF } from "@react-three/drei"
 import { useRef } from "react"
+import { KeyboardControls, PerspectiveCamera, PointerLockControls, useGLTF } from "@react-three/drei"
 
 import Player from "./Player"
 import FpsInspector from "./FpsInspector"
@@ -15,7 +15,6 @@ export default function FpsScene() {
     { name: 'left', keys: ['ArrowLeft', 'KeyA'] },
     { name: 'right', keys: ['ArrowRight', 'KeyD'] },
     { name: 'jump', keys: ['Space'] },
-    { name: 'run', keys: ['Shift'] },
   ]
 
   return (
@@ -31,6 +30,7 @@ export default function FpsScene() {
 function Game() {
 
   const type = useFpsStore(state => state.camera.type)
+
   const cameraRef = useRef()
 
   const { nodes, scene } = useGLTF('/models/scene-transformed.glb')
@@ -39,15 +39,15 @@ function Game() {
 
   return (
     <>
-      <Map nodes={nodes} />
-      <PerspectiveCamera ref={cameraRef} makeDefault position={[0, 10, 10]} />
+      <MapCollider nodes={nodes} />
+      <PerspectiveCamera ref={cameraRef} makeDefault />
       { type == 'pointerlock' && <PointerLockControls />}
       <Player octree={octree} position={[0, 0, 0]} />
     </>
   )
 }
 
-function Map({ nodes }) {
+function MapCollider({ nodes }) {
   return (
     <group dispose={null}>
       <mesh castShadow receiveShadow geometry={nodes.Suzanne007.geometry} material={nodes.Suzanne007.material} position={[1.74, 1.04, 24.97]} />
