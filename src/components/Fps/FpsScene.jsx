@@ -46,7 +46,7 @@ function Game() {
       <PerspectiveCamera ref={cameraRef} makeDefault position={[0, 10, 10]} />
       {/* <OrbitControls /> */}
       { type == 'pointerlock' && <PointerLockControls />}
-      <Player octree={octree} />
+      <Player octree={octree} position={[0, 0, 0]} />
     </>
   )
 }

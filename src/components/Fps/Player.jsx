@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useKeyboardControls } from '@react-three/drei'
 import { Vector3 } from 'three'
@@ -9,14 +9,17 @@ const SPEED = 25
 const SPEED_ON_AIR = 8
 const DAMPING = 4
 
+const HEIGHT = 1.8
 const RADIUS = 0.5
+const OFFSET = [0, 0, 0]
 
-export default function Player({ octree }) {
+export default function Player({ octree, position }) {
 
   const playerOnFloor = useRef(false)
   const playerVelocity = useMemo(() => new Vector3(), [])
   const playerDirection = useMemo(() => new Vector3(), [])
-  const capsule = useMemo(() => new Capsule(new Vector3(0, 10, 0), new Vector3(0, 11, 0), RADIUS), [])
+  const capsule = useMemo(() => new Capsule(new Vector3(position[0], 0, position[2]), new Vector3(position[0], HEIGHT, position[2]), RADIUS), [position])
+  const cameraOffset = useMemo(() => new Vector3(OFFSET[0], OFFSET[1], OFFSET[2]), [])
 
   const [, get] = useKeyboardControls()
 
@@ -44,17 +47,18 @@ export default function Player({ octree }) {
     applyCollision(intersection)
 
     // update camaera position
-    camera.position.copy(capsule.end)
+    camera.position.copy(capsule.end.clone().add(cameraOffset)) // update camera position
 
     // reset player on fall down
-    if (camera.position.y <= -2) {
-      playerVelocity.set(0, 0, 0)
-      capsule.start.set(0, 10, 0)
-      capsule.end.set(0, 11, 0)
-      camera.position.copy(capsule.end)
-      camera.rotation.set(0, 0, 0)
-    }
+    if (camera.position.y <= -2) resetPlayer()
   })
+
+  // reset
+  function resetPlayer() {
+    playerVelocity.set(0, 0, 0)
+    capsule.start.set(position[0], 0, position[2])
+    capsule.end.set(position[0], HEIGHT, position[2])
+  }
 
   // key input
   function applyKeyboardMovement(camera, delta, forward, backward, left, right) {
