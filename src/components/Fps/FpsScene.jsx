@@ -1,10 +1,10 @@
-import { KeyboardControls, OrbitControls, PerspectiveCamera, PointerLockControls, useGLTF } from "@react-three/drei"
+import { KeyboardControls, PerspectiveCamera, PointerLockControls, useGLTF } from "@react-three/drei"
 import { useRef } from "react"
 
-import useOctree from "./hooks/useOctree"
-import useOctreeHelper from "./hooks/useOctreeHelper"
 import Player from "./Player"
 import FpsInspector from "./FpsInspector"
+import useOctree from "./hooks/useOctree"
+import useOctreeHelper from "./hooks/useOctreeHelper"
 import useFpsStore from "./stores/useFpsStore"
 
 export default function FpsScene() {
@@ -44,7 +44,6 @@ function Game() {
     <>
       <Map nodes={nodes} />
       <PerspectiveCamera ref={cameraRef} makeDefault position={[0, 10, 10]} />
-      {/* <OrbitControls /> */}
       { type == 'pointerlock' && <PointerLockControls />}
       <Player octree={octree} position={[0, 0, 0]} />
     </>

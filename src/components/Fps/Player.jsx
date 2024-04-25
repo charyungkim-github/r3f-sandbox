@@ -1,25 +1,23 @@
-import { useRef, useMemo, useEffect } from 'react'
+import { useRef, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useKeyboardControls } from '@react-three/drei'
 import { Vector3 } from 'three'
 import { Capsule } from 'three/examples/jsm/math/Capsule.js'
 
-const GRAVITY = 30
-const SPEED = 25
-const SPEED_ON_AIR = 8
-const DAMPING = 4
-
-const HEIGHT = 1.8
-const RADIUS = 0.5
-const OFFSET = [0, 0, 0]
+import useFpsStore from './stores/useFpsStore'
 
 export default function Player({ octree, position }) {
 
-  const playerOnFloor = useRef(false)
+  const player = useFpsStore(state => state.player)
+
   const playerVelocity = useMemo(() => new Vector3(), [])
   const playerDirection = useMemo(() => new Vector3(), [])
-  const capsule = useMemo(() => new Capsule(new Vector3(position[0], 0, position[2]), new Vector3(position[0], HEIGHT, position[2]), RADIUS), [position])
-  const cameraOffset = useMemo(() => new Vector3(OFFSET[0], OFFSET[1], OFFSET[2]), [])
+  const cameraOffset = useMemo(() => new Vector3(player.cameraOffset[0], player.cameraOffset[1], player.cameraOffset[2]), [player.cameraOffset])
+  const capsuleStart = useMemo(() => new Vector3(position[0], 0, position[2]), [position])
+  const capsuleEnd = useMemo(() => new Vector3(position[0], player.capsuleHeight, position[2]), [position, player.capsuleHeight])
+  const capsule = useMemo(() => new Capsule(capsuleStart.clone(), capsuleEnd.clone(), player.capsuleRadius), [position, capsuleStart, capsuleEnd])
+
+  const playerOnFloor = useRef(false)
 
   const [, get] = useKeyboardControls()
 
@@ -56,15 +54,15 @@ export default function Player({ octree, position }) {
   // reset
   function resetPlayer() {
     playerVelocity.set(0, 0, 0)
-    capsule.start.set(position[0], 0, position[2])
-    capsule.end.set(position[0], HEIGHT, position[2])
+    capsule.start.copy(capsuleStart)
+    capsule.end.copy(capsuleEnd)
   }
 
   // key input
   function applyKeyboardMovement(camera, delta, forward, backward, left, right) {
 
     // get speed
-    const speed = playerOnFloor.current ? SPEED : SPEED_ON_AIR
+    const speed = playerOnFloor.current ? player.speed : player.speedOnAir
     const speedDir = backward || left ? -1 : 1
     const speedDelta = delta * speed * speedDir
 
@@ -82,11 +80,11 @@ export default function Player({ octree, position }) {
   // physics
   function applyGravity(deltaSteps) {
 
-    let damping = Math.exp(-DAMPING * deltaSteps) - 1
+    let damping = Math.exp(-player.damping * deltaSteps) - 1
 
     // on air
     if (!playerOnFloor.current) {
-      playerVelocity.y -= GRAVITY * deltaSteps
+      playerVelocity.y -= player.gravity * deltaSteps
       damping *= 0.1
     }
 
