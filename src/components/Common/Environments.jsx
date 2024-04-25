@@ -5,6 +5,7 @@ import useNavigationStore from "../Navigation/stores/useNavigationStore"
 import useVideoStore from "../Video/stores/useVideoStore"
 import useMeshPortalStore from "../MeshPortal/stores/useMeshPortalStore"
 import useWallClippingStore from "../WallClipping/stores/useWallClippingStore"
+import useFpsStore from "../Fps/stores/useFpsStore"
 
 export default function Environments({ page }) {
 
@@ -13,6 +14,7 @@ export default function Environments({ page }) {
   const videonEnv = useVideoStore( state => state.environments )
   const meshPortalEnv = useMeshPortalStore( state => state.environments )
   const wallClippinglEnv = useWallClippingStore( state => state.environments )
+  const fpsEnv = useFpsStore( state => state.environments )
 
   let environments
   switch (page) {
@@ -30,6 +32,9 @@ export default function Environments({ page }) {
       break
     case 'wallclipping':
       environments = wallClippinglEnv
+      break
+    case 'fps':
+      environments = fpsEnv
       break
     default:
       break
