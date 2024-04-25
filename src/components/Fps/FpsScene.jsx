@@ -1,27 +1,28 @@
+import { useState } from "react"
 import { KeyboardControls, useGLTF } from "@react-three/drei"
 
 import Camera from "./Camera"
+import Collider from "./Collider"
+import Map from "./Map"
+import Cars from "./Cars"
 import Player from "./Player"
 import FpsInspector from "./FpsInspector"
-import useOctree from "./hooks/useOctree"
-import useOctreeHelper from "./hooks/useOctreeHelper"
 import useFpsStore from "./stores/useFpsStore"
-import DebugOctreeMesh from "./DebugOctreeMesh"
 
 export default function FpsScene() {
 
   const keymap = useFpsStore(state => state.keymap)
 
-  const { nodes, scene } = useGLTF('/models/scene-transformed.glb')
-  const octree = useOctree(scene)
-  useOctreeHelper(octree)
+  const [octree, setOctree] = useState()
 
   return (
     <>
       <KeyboardControls map={keymap}>
         <Camera />
+        <Collider setOctree={setOctree} />
         <Player octree={octree} position={[0, 0, 1]} />
-        <DebugOctreeMesh nodes={nodes} />
+        {/* <Map /> */}
+        {/* <Cars /> */}
       </KeyboardControls>
       <FpsInspector />
     </>

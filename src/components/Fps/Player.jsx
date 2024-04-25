@@ -23,6 +23,8 @@ export default function Player({ octree, position }) {
 
   useFrame(({camera}, delta) => {
 
+    if(!octree) return
+
     /* Key inputs */
     const { forward, backward, left, right, jump, logCamera } = get()
 
