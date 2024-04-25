@@ -16,8 +16,6 @@ export default function FpsScene() {
     { name: 'right', keys: ['ArrowRight', 'KeyD'] },
     { name: 'jump', keys: ['Space'] },
     { name: 'run', keys: ['Shift'] },
-    { name: 'logCamera', keys: ['KeyT'] }, // for debug
-    { name: 'logPlayer', keys: ['KeyY'] }, // for debug
   ]
 
   return (
@@ -33,7 +31,6 @@ export default function FpsScene() {
 function Game() {
 
   const type = useFpsStore(state => state.camera.type)
-  const controlsRef = useRef()
   const cameraRef = useRef()
 
   const { nodes, scene } = useGLTF('/models/scene-transformed.glb')
@@ -58,9 +55,3 @@ function Map({ nodes }) {
     )
 }
 useGLTF.preload('/models/scene-transformed.glb')
-
-// cameraRef.current.getWorldDirection(cameraWorldDirection)
-// cameraWorldDirection.cross(cameraRef.current.up)
-// cameraWorldDirection.multiplyScalar(-speed)
-// cameraRef.current.position.add(cameraWorldDirection)
-// controlsRef.current.target.add(cameraWorldDirection)
