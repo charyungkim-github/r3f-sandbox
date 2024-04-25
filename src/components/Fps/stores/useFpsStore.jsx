@@ -2,7 +2,7 @@ import { create } from 'zustand'
 
 export default create((set, get) => ({
   camera: {
-    type: 'pointerlock'
+    type: 'orbit' // pointerlock, orbit
   },
   player: {
     gravity: 30,
@@ -11,7 +11,7 @@ export default create((set, get) => ({
     speed: 25,
     speedOnAir: 4,
     damping: 4,
-    cameraOffset: [0, 0, 0]
+    cameraOffset: [0, 0, 1]
   },
   environments: {
     dirPosition: [-10, 20, 5],

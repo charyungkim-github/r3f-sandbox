@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useKeyboardControls } from '@react-three/drei'
 import { Vector3 } from 'three'
@@ -6,7 +6,7 @@ import { Capsule } from 'three/examples/jsm/math/Capsule.js'
 
 import useFpsStore from './stores/useFpsStore'
 
-export default function Player({ octree, position }) {
+export default function Player({ octree, position, cameraRef }) {
 
   const player = useFpsStore(state => state.player)
 
@@ -21,14 +21,18 @@ export default function Player({ octree, position }) {
 
   const [, get] = useKeyboardControls()
 
-  useFrame(({ camera }, delta) => {
+  useEffect(()=>{
+    cameraRef.current.position.set(position[0] + cameraOffset.x, position[1] + cameraOffset.y, position[2] + cameraOffset.z)
+  }, [])
+
+  useFrame((state, delta) => {
 
     /* Key inputs */
     const { forward, backward, left, right, jump, logCamera } = get()
 
     // apply movement velocity
     if(left || right || forward || backward) {
-      applyKeyboardMovement(camera, delta, forward, backward, left, right)
+      applyKeyboardMovement(delta, forward, backward, left, right)
     }
 
     // update jump velocity
@@ -45,10 +49,10 @@ export default function Player({ octree, position }) {
     applyCollision(intersection)
 
     // update camaera position
-    camera.position.copy(capsule.end.clone().add(cameraOffset)) // update camera position
+    cameraRef.current.position.copy(capsule.end.clone().add(cameraOffset)) // update camera position
 
     // reset player on fall down
-    if (camera.position.y <= -2) resetPlayer()
+    if (cameraRef.current.position.y <= -2) resetPlayer()
   })
 
   // reset
@@ -59,7 +63,7 @@ export default function Player({ octree, position }) {
   }
 
   // key input
-  function applyKeyboardMovement(camera, delta, forward, backward, left, right) {
+  function applyKeyboardMovement(delta, forward, backward, left, right) {
 
     // get speed
     const speed = playerOnFloor.current ? player.speed : player.speedOnAir
@@ -67,10 +71,10 @@ export default function Player({ octree, position }) {
     const speedDelta = delta * speed * speedDir
 
     // direction
-    camera.getWorldDirection(playerDirection)
+    cameraRef.current.getWorldDirection(playerDirection)
     playerDirection.y = 0
     playerDirection.normalize()
-    if(left || right) playerDirection.cross(camera.up)
+    if(left || right) playerDirection.cross(cameraRef.current.up)
     playerDirection.multiplyScalar(speedDelta)
 
     // velocity

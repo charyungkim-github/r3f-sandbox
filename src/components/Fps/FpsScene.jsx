@@ -1,5 +1,5 @@
 import { useRef } from "react"
-import { KeyboardControls, PerspectiveCamera, PointerLockControls, useGLTF } from "@react-three/drei"
+import { PerspectiveCamera, PointerLockControls, CameraControls, KeyboardControls, useGLTF } from "@react-three/drei"
 
 import Player from "./Player"
 import FpsInspector from "./FpsInspector"
@@ -41,8 +41,9 @@ function Game() {
     <>
       <MapCollider nodes={nodes} />
       <PerspectiveCamera ref={cameraRef} makeDefault />
-      { type == 'pointerlock' && <PointerLockControls />}
-      <Player octree={octree} position={[0, 0, 0]} />
+      { type == 'pointerlock' && <PointerLockControls /> }
+      { type == 'orbit' && <CameraControls /> }
+      <Player octree={octree} position={[0, 0, 0]} cameraRef={cameraRef} />
     </>
   )
 }
