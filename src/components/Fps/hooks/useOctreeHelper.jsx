@@ -1,9 +1,12 @@
 import { useEffect } from 'react'
 import { useThree } from '@react-three/fiber'
 import { OctreeHelper } from 'three/examples/jsm/helpers/OctreeHelper'
-import { useControls } from 'leva'
+
+import useFpsStore from '../stores/useFpsStore'
 
 export default function useOctreeHelper(octree) {
+
+  const debug = useFpsStore(state => state.debug.enableOctreeHelper)
 
   const { scene } = useThree()
 
@@ -14,14 +17,7 @@ export default function useOctreeHelper(octree) {
     return () => scene.remove(helper)
   }, [octree, scene])
 
-  useControls('Octree Helper', {
-    visible: {
-      value: false,
-      onChange: (v) => {
-        scene.getObjectByName('octreeHelper').visible = v
-        if (document.getElementById('Octree Helper.visible'))
-          document.getElementById('Octree Helper.visible').blur()
-      }
-    }
-  })
+  useEffect(()=> {
+    scene.getObjectByName('octreeHelper').visible = debug
+  }, [debug])
 }
