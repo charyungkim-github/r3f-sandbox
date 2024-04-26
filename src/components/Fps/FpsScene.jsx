@@ -21,7 +21,7 @@ export default function FpsScene() {
         <Map />
         <Cars />
         <Camera />
-        <Player octree={octree} position={[-3, 0, 0]} />
+        <Player octree={octree} position={[0, 0, 0]} />
         <PrimitiveCollider setOctree={setOctree} />
       </KeyboardControls>
       <FpsInspector />

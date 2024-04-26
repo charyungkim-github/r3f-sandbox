@@ -36,9 +36,12 @@ export default function Player({ octree, position }) {
     if(logPlayer) console.log(capsule)
 
     // apply movement velocity
-    if(left || right || forward || backward) {
-      applyKeyboardMovement(camera, delta, forward, backward, left, right)
-    }
+    if(forward) applyKeyboardMovement(camera, delta, false)
+    if(backward) applyKeyboardMovement(camera, -delta, false)
+    if(left) applyKeyboardMovement(camera, -delta, true)
+    if(right) applyKeyboardMovement(camera, delta, true)
+    if (jump && player.enableJump && playerOnFloor.current) playerVelocity.y = 10
+
 
     // update jump velocity
     if (jump){
@@ -68,21 +71,18 @@ export default function Player({ octree, position }) {
   }
 
   // key input
-  function applyKeyboardMovement(camera, delta, forward, backward, left, right) {
+  function applyKeyboardMovement(camera, delta, isSide) {
 
-    // get speed
-    const speed = playerOnFloor.current ? player.speed : player.speedOnAir
-    const speedDir = backward || left ? -1 : 1
-    const speedDelta = delta * speed * speedDir
+    // speed
+    const speed = playerOnFloor.current ? player.speed : player.speed * 0.1
+    const speedDelta = speed * delta
 
-    // direction
+    // movement
     camera.getWorldDirection(playerDirection)
     playerDirection.y = 0
     playerDirection.normalize()
-    if(left || right) playerDirection.cross(camera.up)
+    if(isSide) playerDirection.cross(camera.up)
     playerDirection.multiplyScalar(speedDelta)
-
-    // velocity
     playerVelocity.add(playerDirection)
   }
 

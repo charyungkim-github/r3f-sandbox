@@ -8,7 +8,7 @@ export default function Camera() {
     <>
       { type == 'pointerlock' && <PointerLockControls /> }
       { type == 'orbit' && <CameraControls /> }
-      <PerspectiveCamera makeDefault position={[0, 0, 0]} rotation-y={-Math.PI/2}/>
+      <PerspectiveCamera makeDefault position={[0, 0, 1]}/>
     </>
   )
 }
