@@ -5,7 +5,7 @@ import useOctree from "./hooks/useOctree"
 import useOctreeHelper from "./hooks/useOctreeHelper"
 import useFpsStore from "./stores/useFpsStore"
 
-export default function Collider ({ setOctree }) {
+export function PrimitiveCollider ({ setOctree }) {
 
   const colliderModelsRef = useRef()
 

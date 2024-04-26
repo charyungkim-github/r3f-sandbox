@@ -2,7 +2,7 @@ import { useState } from "react"
 import { KeyboardControls, useGLTF } from "@react-three/drei"
 
 import Camera from "./Camera"
-import Collider from "./Collider"
+import { PrimitiveCollider } from "./Collider"
 import Map from "./Map"
 import Cars from "./Cars"
 import Player from "./Player"
@@ -19,7 +19,7 @@ export default function FpsScene() {
     <>
       <KeyboardControls map={keymap}>
         <Camera />
-        <Collider setOctree={setOctree} />
+        <PrimitiveCollider setOctree={setOctree} />
         <Player octree={octree} position={[0, 2, 1]} />
         <Map />
         <Cars />
