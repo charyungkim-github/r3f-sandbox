@@ -13,20 +13,27 @@ export default function Player({ octree, position }) {
   const playerVelocity = useMemo(() => new Vector3(), [])
   const playerDirection = useMemo(() => new Vector3(), [])
   const cameraOffset = useMemo(() => new Vector3(player.cameraOffset[0], player.cameraOffset[1], player.cameraOffset[2]), [player.cameraOffset])
-  const capsuleStart = useMemo(() => new Vector3(position[0], 0, position[2]), [position])
-  const capsuleEnd = useMemo(() => new Vector3(position[0], player.capsuleHeight, position[2]), [position, player.capsuleHeight])
-  const capsule = useMemo(() => new Capsule(capsuleStart.clone(), capsuleEnd.clone(), player.capsuleRadius), [position, capsuleStart, capsuleEnd])
+  const capsuleStart = useMemo(() => new Vector3(0, 0, 0), [])
+  const capsuleEnd = useMemo(() => new Vector3(0, player.capsuleHeight, 0), [player.capsuleHeight])
+  const capsule = useMemo(() => new Capsule(capsuleStart.clone(), capsuleEnd.clone(), player.capsuleRadius), [capsuleStart, capsuleEnd])
 
   const playerOnFloor = useRef(false)
 
   const [, get] = useKeyboardControls()
+
+  useEffect(()=>{
+    capsule.translate(new Vector3(position[0], position[1], position[2]))
+  },[position])
 
   useFrame(({camera}, delta) => {
 
     if(!octree) return
 
     /* Key inputs */
-    const { forward, backward, left, right, jump, logCamera } = get()
+    const { forward, backward, left, right, jump, logCamera, logPlayer } = get()
+
+    if(logCamera) console.log(camera, camera.position)
+    if(logPlayer) console.log(capsule)
 
     // apply movement velocity
     if(left || right || forward || backward) {

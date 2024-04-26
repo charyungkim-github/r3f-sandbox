@@ -6,12 +6,12 @@ import useFpsStore from '../stores/useFpsStore'
 
 export default function useOctreeHelper(octree) {
 
-  const debug = useFpsStore(state => state.debug.enableOctreeHelper)
+  const enableOctreeHelper = useFpsStore(state => state.debug.enableOctreeHelper)
 
   const { scene } = useThree()
 
   useEffect(() => {
-    if(octree == undefined) return
+    if(!octree) return
     const helper = new OctreeHelper(octree, 'lightgreen')
     helper.name = 'octreeHelper'
     scene.add(helper)
@@ -19,7 +19,7 @@ export default function useOctreeHelper(octree) {
   }, [octree, scene])
 
   useEffect(()=> {
-    if(octree == undefined) return
-    scene.getObjectByName('octreeHelper').visible = debug
-  }, [octree, debug])
+    if(!octree) return
+    scene.getObjectByName('octreeHelper').visible = enableOctreeHelper
+  }, [octree, enableOctreeHelper])
 }

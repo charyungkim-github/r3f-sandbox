@@ -2,7 +2,7 @@ import { create } from 'zustand'
 
 export default create((set, get) => ({
   camera: {
-    type: 'orbit' // pointerlock, orbit
+    type: 'pointerlock' // pointerlock, orbit
   },
   player: {
     gravity: 30,
@@ -28,5 +28,7 @@ export default create((set, get) => ({
     { name: 'left', keys: ['ArrowLeft', 'KeyA'] },
     { name: 'right', keys: ['ArrowRight', 'KeyD'] },
     { name: 'jump', keys: ['Space'] },
+    { name: 'logCamera', keys: ['KeyT'] },
+    { name: 'logPlayer', keys: ['KeyY'] },
   ]
 }))

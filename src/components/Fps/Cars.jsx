@@ -14,7 +14,6 @@ export default function Cars() {
 }
 
 function Car(props) {
-
   const { nodes, materials, scene } = useGLTF("/models/car_01.glb")
 
   return (
