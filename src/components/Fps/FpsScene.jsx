@@ -20,9 +20,9 @@ export default function FpsScene() {
       <KeyboardControls map={keymap}>
         <Camera />
         <Collider setOctree={setOctree} />
-        <Player octree={octree} position={[0, 0, 1]} />
-        {/* <Map /> */}
-        {/* <Cars /> */}
+        <Player octree={octree} position={[0, 2, 1]} />
+        <Map />
+        <Cars />
       </KeyboardControls>
       <FpsInspector />
     </>

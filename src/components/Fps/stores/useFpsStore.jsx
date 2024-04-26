@@ -6,11 +6,11 @@ export default create((set, get) => ({
   },
   player: {
     gravity: 30,
-    capsuleHeight: 1.8,
+    capsuleHeight: 0.8,
     capsuleRadius: 0.5,
-    speed: 25,
-    speedOnAir: 4,
-    damping: 4,
+    speed: 40,
+    speedOnAir: 5,
+    damping: 10,
     cameraOffset: [0, 0, 0]
   },
   environments: {
@@ -20,7 +20,7 @@ export default create((set, get) => ({
   },
   debug: {
     enableOctreeHelper: false,
-    enableOctreeMesh: true,
+    enableOctreeMesh: false,
   },
   keymap: [
     { name: 'forward', keys: ['ArrowUp', 'KeyW'] },

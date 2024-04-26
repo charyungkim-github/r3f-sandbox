@@ -1,5 +1,4 @@
-import { useEffect } from "react"
-import { useGLTF } from "@react-three/drei"
+import { useEffect, useRef } from "react"
 
 import useOctree from "./hooks/useOctree"
 import useOctreeHelper from "./hooks/useOctreeHelper"
@@ -7,23 +6,41 @@ import useFpsStore from "./stores/useFpsStore"
 
 export default function Collider ({setOctree}) {
 
-  const enableOctreeMesh = useFpsStore(state => state.debug.enableOctreeMesh)
+  const colliderModelsRef = useRef()
 
-  // TODO :: make custom collider (boxes)
-
-  const { nodes, scene } = useGLTF('/models/scene-transformed.glb')
-  const octree = useOctree(scene)
+  const octree = useOctree(colliderModelsRef.current)
   useOctreeHelper(octree)
 
-  useEffect(() => { setOctree(octree) }, [])
+  useEffect(() => {
+    octree && setOctree(octree)
+  }, [octree])
 
   return(
-    <>
-    { enableOctreeMesh &&
-      <group dispose={null}>
-        <mesh castShadow receiveShadow geometry={nodes.Suzanne007.geometry} material={nodes.Suzanne007.material} position={[1.74, 1.04, 24.97]} />
-      </group> }
-    </>
+    <group ref={colliderModelsRef}>
+
+      {/* Cars */}
+      <Box position={[6, 1, -2.8]} scale={[4, 2, 2]} />
+      <Box position={[6, 1, 2.9]} scale={[4, 2, 2]} />
+      <Box position={[0.6, 1, -5.6]} rotation={[0, 0.95, 0]} scale={[4, 2, 2]} />
+      <Box position={[0.75, 1, 5.6]} rotation={[0, -0.95, 0]} scale={[4, 2, 2]} />
+      <Box position={[-6, 1, -2.8]} scale={[4, 2, 2]} />
+      <Box position={[-6, 1, 2.9]} scale={[4, 2, 2]} />
+
+      {/* Floor */}
+      <Box position={[0, -0.5, 0]} scale={[50, 1, 50]} />
+
+    </group>
   )
 }
-useGLTF.preload('/models/scene-transformed.glb')
+
+function Box(props) {
+
+  const enableOctreeMesh = useFpsStore(state => state.debug.enableOctreeMesh)
+
+  return(
+    <mesh {...props}>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial color="aquamarine" visible={enableOctreeMesh}/>
+    </mesh>
+  )
+}

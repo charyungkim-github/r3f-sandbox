@@ -11,6 +11,7 @@ export default function useOctreeHelper(octree) {
   const { scene } = useThree()
 
   useEffect(() => {
+    if(octree == undefined) return
     const helper = new OctreeHelper(octree, 'lightgreen')
     helper.name = 'octreeHelper'
     scene.add(helper)
@@ -18,6 +19,7 @@ export default function useOctreeHelper(octree) {
   }, [octree, scene])
 
   useEffect(()=> {
+    if(octree == undefined) return
     scene.getObjectByName('octreeHelper').visible = debug
-  }, [debug])
+  }, [octree, debug])
 }
