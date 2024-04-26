@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react"
+import { useGLTF } from "@react-three/drei"
 
 import useOctree from "./hooks/useOctree"
 import useOctreeHelper from "./hooks/useOctreeHelper"
 import useFpsStore from "./stores/useFpsStore"
-import { useGLTF } from "@react-three/drei"
 
-export default function Collider ({setOctree}) {
+export default function Collider ({ setOctree }) {
 
   const colliderModelsRef = useRef()
 
@@ -30,6 +30,11 @@ export default function Collider ({setOctree}) {
       {/* Floor */}
       <Box position={[0, -0.5, 0]} scale={[50, 1, 50]} />
 
+      {/* Walls */}
+      <Box position={[0, 1, 12]} scale={[35, 4, 2]} />
+      <Box position={[0, 1, -12]} scale={[35, 4, 2]} />
+      <Box position={[-12, 1, 0]} scale={[2, 4, 35]} />
+      <Box position={[15, 1, 0]} scale={[2, 4, 35]} rotation={[0, 0.2, 0]}/>
     </group>
   )
 }
@@ -41,12 +46,12 @@ function Box(props) {
   return(
     <mesh {...props}>
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color="aquamarine" visible={enableOctreeMesh}/>
+      <meshStandardMaterial color="aquamarine" visible={enableOctreeMesh} opacity={0.5} transparent={true} />
     </mesh>
   )
 }
 
-export function GltfCollider ({setOctree}) {
+export function GltfCollider ({ setOctree }) {
 
   const enableOctreeMesh = useFpsStore(state => state.debug.enableOctreeMesh)
 
