@@ -1,5 +1,5 @@
 import { useRef, useMemo, useEffect } from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
+import { useFrame } from '@react-three/fiber'
 import { useKeyboardControls } from '@react-three/drei'
 import { Vector3 } from 'three'
 import { Capsule } from 'three/examples/jsm/math/Capsule.js'
@@ -40,17 +40,10 @@ export default function Player({ octree, position }) {
     if(backward) applyKeyboardMovement(camera, -delta, false)
     if(left) applyKeyboardMovement(camera, -delta, true)
     if(right) applyKeyboardMovement(camera, delta, true)
-    if (jump && player.enableJump && playerOnFloor.current) playerVelocity.y = 10
+    if (jump && playerOnFloor.current) playerVelocity.y = 10
 
-
-    // update jump velocity
-    if (jump){
-      if (playerOnFloor.current) playerVelocity.y = 10
-    }
-
-    /* Gravity */
-    const deltaSteps = Math.min(0.05, delta) / 1
-    applyGravity(deltaSteps)
+    /* Damping */
+    applyDamping(delta)
 
     /* Collision */
     const intersection = octree.capsuleIntersect(capsule)
@@ -87,13 +80,13 @@ export default function Player({ octree, position }) {
   }
 
   // physics
-  function applyGravity(deltaSteps) {
+  function applyDamping(delta) {
 
-    let damping = Math.exp(-player.damping * deltaSteps) - 1
+    let damping = Math.exp(-player.damping * delta) - 1
 
     // on air
     if (!playerOnFloor.current) {
-      playerVelocity.y -= player.gravity * deltaSteps
+      playerVelocity.y -= player.gravity * delta
       damping *= 0.1
     }
 
@@ -101,15 +94,15 @@ export default function Player({ octree, position }) {
     playerVelocity.addScaledVector(playerVelocity, damping)
 
     // apply on capsule
-    capsule.translate(playerVelocity.clone().multiplyScalar(deltaSteps))
+    capsule.translate(playerVelocity.clone().multiplyScalar(delta))
   }
 
   function applyCollision(intersection) {
-    playerOnFloor.current = false
-    if (intersection) {
 
-      // check if player is on floor
-      playerOnFloor.current = intersection.normal.y > 0
+    // check if player is on floor
+    playerOnFloor.current = intersection && intersection.normal.y > 0
+
+    if (intersection) {
 
       // slope
       if (!playerOnFloor.current) {

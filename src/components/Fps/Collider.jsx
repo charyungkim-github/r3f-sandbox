@@ -1,18 +1,18 @@
 import { useEffect, useRef } from "react"
 import { useGLTF } from "@react-three/drei"
-import { Octree } from 'three/examples/jsm/math/Octree'
 
+import useOctree from "./hooks/useOctree"
+import useOctreeHelper from "./hooks/useOctreeHelper"
 import useFpsStore from "./stores/useFpsStore"
 
 export function PrimitiveCollider ({ setOctree }) {
 
-  const octree = useRef()
   const colliderModelsRef = useRef()
 
-  useEffect(()=>{
-    octree.current = new Octree().fromGraphNode(colliderModelsRef.current)
-    setOctree(octree.current)
-  }, [])
+  const octree = useOctree(colliderModelsRef.current)
+  useOctreeHelper(octree)
+
+  useEffect(() => { octree && setOctree(octree) }, [octree])
 
   return(
     <group ref={colliderModelsRef}>
@@ -56,12 +56,8 @@ export function GltfCollider ({ setOctree }) {
 
   const { nodes, scene } = useGLTF('/models/scene-transformed.glb')
 
-  const octree = useRef()
-
-  useEffect(()=>{
-    octree.current = new Octree().fromGraphNode(scene)
-    setOctree(octree.current)
-  }, [])
+  const octree = useOctree(scene)
+  useOctreeHelper(octree)
 
   useEffect(() => { setOctree(octree) }, [])
 
