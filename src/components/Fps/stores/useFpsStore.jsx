@@ -9,7 +9,7 @@ export default create((set, get) => ({
     capsuleHeight: 0.8,
     capsuleRadius: 0.5,
     speed: 40,
-    speedOnAir: 5,
+    jumpForce: 6,
     damping: 10,
     cameraOffset: [0, 0, 0]
   },

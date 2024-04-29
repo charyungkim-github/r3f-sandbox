@@ -23,15 +23,16 @@ export default function Player({ octree, position }) {
 
   useEffect(()=>{
     capsule.translate(new Vector3(position[0], position[1], position[2]))
-  },[position])
+  }, [position])
 
-  useFrame(({camera}, delta) => {
+  useFrame(({ camera, controls }, delta) => {
 
     if(!octree) return
 
     /* Key inputs */
     const { forward, backward, left, right, jump, logCamera, logPlayer } = get()
 
+    // log
     if(logCamera) console.log(camera, camera.position)
     if(logPlayer) console.log(capsule)
 
@@ -40,17 +41,16 @@ export default function Player({ octree, position }) {
     if(backward) applyKeyboardMovement(camera, -delta, false)
     if(left) applyKeyboardMovement(camera, -delta, true)
     if(right) applyKeyboardMovement(camera, delta, true)
-    if (jump && playerOnFloor.current) playerVelocity.y = 10
+    if (jump && playerOnFloor.current) playerVelocity.y = player.jumpForce
 
-    /* Damping */
-    applyDamping(delta)
-
-    /* Collision */
+    // check intersection
     const intersection = octree.capsuleIntersect(capsule)
-    applyCollision(intersection)
 
-    // update camaera position
-    camera.position.copy(capsule.end.clone().add(cameraOffset)) // update camera position
+    // apply velocity
+    applyVelocity(intersection, delta)
+
+    // apply translation
+    applyTranslation(intersection, delta, camera) // camera || controls
 
     // reset player on fall down
     if (camera.position.y <= -2) resetPlayer()
@@ -79,38 +79,27 @@ export default function Player({ octree, position }) {
     playerVelocity.add(playerDirection)
   }
 
-  // physics
-  function applyDamping(delta) {
+  function applyVelocity(intersection, delta) {
 
-    let damping = Math.exp(-player.damping * delta) - 1
+    const damping = Math.exp(-player.damping * delta) - 1
 
-    // on air
-    if (!playerOnFloor.current) {
-      playerVelocity.y -= player.gravity * delta
-      damping *= 0.1
-    }
-
-    // damping
-    playerVelocity.addScaledVector(playerVelocity, damping)
-
-    // apply on capsule
-    capsule.translate(playerVelocity.clone().multiplyScalar(delta))
-  }
-
-  function applyCollision(intersection) {
-
-    // check if player is on floor
+    // chekc is floor
     playerOnFloor.current = intersection && intersection.normal.y > 0
 
-    if (intersection) {
+    // apply velocity
+    if(playerOnFloor.current) playerVelocity.addScaledVector(playerVelocity, damping)
+    else playerVelocity.y -= player.gravity * delta
+  }
 
-      // slope
-      if (!playerOnFloor.current) {
-        playerVelocity.addScaledVector(intersection.normal, -intersection.normal.dot(playerVelocity))
-      }
+  function applyTranslation(intersection, delta, camera) {
 
-      // apply on calsule
-      capsule.translate(intersection.normal.multiplyScalar(intersection.depth))
-    }
+    // player
+    capsule.translate(playerVelocity.clone().multiplyScalar(delta))
+    if(intersection) capsule.translate(intersection.normal.multiplyScalar(intersection.depth))
+
+    // camera
+    const targetPosition = capsule.end.clone().add(cameraOffset)
+    if(camera.isCamera) camera.position.copy(targetPosition)
+    else camera.moveTo(targetPosition.x, targetPosition.y, targetPosition.z, false)
   }
 }

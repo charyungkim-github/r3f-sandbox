@@ -33,9 +33,9 @@ export default function FpsInspector(props) {
       value: player.speed,
       onChange: (_value) => updateProperty('player', 'speed', _value)
     },
-    speedOnAir: {
-      value: player.speedOnAir,
-      onChange: (_value) => updateProperty('player', 'speedOnAir', _value)
+    jumpForce: {
+      value: player.jumpForce,
+      onChange: (_value) => updateProperty('player', 'jumpForce', _value)
     },
     damping: {
       value: player.damping,
