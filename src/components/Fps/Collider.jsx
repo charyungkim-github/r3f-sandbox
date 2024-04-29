@@ -29,10 +29,10 @@ export function PrimitiveCollider ({ setOctree }) {
       <Box position={[0, -0.5, 0]} scale={[50, 1, 50]} />
 
       {/* Walls */}
-      <Box position={[0, 1, 12]} scale={[35, 4, 2]} />
+      {/* <Box position={[0, 1, 12]} scale={[35, 4, 2]} />
       <Box position={[0, 1, -12]} scale={[35, 4, 2]} />
       <Box position={[-12, 1, 0]} scale={[2, 4, 35]} />
-      <Box position={[15, 1, 0]} scale={[2, 4, 35]} rotation={[0, 0.2, 0]}/>
+      <Box position={[15, 1, 0]} scale={[2, 4, 35]} rotation={[0, 0.2, 0]}/> */}
 
     </group>
   )
