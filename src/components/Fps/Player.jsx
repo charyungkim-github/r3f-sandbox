@@ -20,14 +20,15 @@ export default function Player({ octree, position }) {
   const capsuleStart = useMemo(() => new Vector3(position[0], 0, position[2]), [position])
   const capsuleEnd = useMemo(() => new Vector3(position[0], player.capsuleHeight, position[2]), [position, player.capsuleHeight])
 
-  const playerOnFloor = useRef(false)
   const playerRef = useRef(null)
+  const playerOnFloor = useRef(false)
+  const time = useRef(false)
 
   const [, get] = useKeyboardControls()
 
-  useEffect(()=> { resetPlayer() }, [])
+  useEffect(()=> { resetPlayer() }, [position])
 
-  useFrame(({ camera }, delta) => {
+  useFrame(({ camera, controls }, delta) => {
 
     if(!octree) return
 
@@ -61,6 +62,11 @@ export default function Player({ octree, position }) {
     // move camera
     const targetPosition = playerRef.current.end.clone().add(cameraOffset)
     camera.position.copy(targetPosition)
+    // controls.moveTo(targetPosition.x, targetPosition.y, targetPosition.z, true)
+
+    // camera shake
+    if (forward || backward || left || right) time.current += delta
+    camera.position.y += Math.sin(time.current * player.shakeFrequency) * player.shakeAmplitude
 
     // reset player on fall down
     if (camera.position.y <= -2) resetPlayer()
@@ -74,6 +80,7 @@ export default function Player({ octree, position }) {
     velocity.set(0, 0, 0)
     playerRef.current.start.copy(capsuleStart)
     playerRef.current.end.copy(capsuleEnd)
+    playerRef.current.translate(new Vector3(position[0], position[1], position[2]))
   }
 
   return(

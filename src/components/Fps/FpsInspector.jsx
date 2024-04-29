@@ -37,13 +37,17 @@ export default function FpsInspector(props) {
       value: player.jumpForce,
       onChange: (_value) => updateProperty('player', 'jumpForce', _value)
     },
-    damping: {
-      value: player.damping,
-      onChange: (_value) => updateProperty('player', 'damping', _value)
-    },
     cameraOffset: {
       value: player.cameraOffset,
       onChange: (_value) => updateProperty('player', 'cameraOffset', _value)
+    },
+    shakeFrequency: {
+      value: player.shakeFrequency,
+      onChange: (_value) => updateProperty('player', 'shakeFrequency', _value)
+    },
+    shakeAmplitude: {
+      value: player.shakeAmplitude,
+      onChange: (_value) => updateProperty('player', 'shakeAmplitude', _value)
     },
   }, { collapsed: true })
 

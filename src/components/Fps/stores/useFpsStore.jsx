@@ -8,10 +8,11 @@ export default create((set, get) => ({
     gravity: 30,
     capsuleHeight: 0.8,
     capsuleRadius: 0.5,
-    speed: 5,
+    speed: 3,
     jumpForce: 6,
-    damping: 10,
-    cameraOffset: [0, 0, 0]
+    cameraOffset: [0, 0, 0],
+    shakeFrequency: 10,
+    shakeAmplitude: 0.02,
   },
   environments: {
     dirPosition: [-10, 20, 5],
