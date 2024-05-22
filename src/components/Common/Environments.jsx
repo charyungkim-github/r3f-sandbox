@@ -11,7 +11,7 @@ export default function Environments({ page }) {
 
   const splattingEnv = useSplattingStore( state => state.environments )
   const navigationEnv = useNavigationStore( state => state.environments )
-  const videonEnv = useVideoStore( state => state.environments )
+  const videoEnv = useVideoStore( state => state.environments )
   const meshPortalEnv = useMeshPortalStore( state => state.environments )
   const wallClippinglEnv = useWallClippingStore( state => state.environments )
   const fpsEnv = useFpsStore( state => state.environments )
@@ -25,7 +25,7 @@ export default function Environments({ page }) {
       environments = navigationEnv
       break
     case 'video':
-      environments = videonEnv
+      environments = videoEnv
       break
     case 'meshportal':
       environments = meshPortalEnv
@@ -37,9 +37,11 @@ export default function Environments({ page }) {
       environments = fpsEnv
       break
     default:
+      environments = null
       break
   }
 
+  if(!environments) return
   return(
     <>
       <directionalLight castShadow intensity={1} position={environments.dirPosition} color={'#ffffff'}/>

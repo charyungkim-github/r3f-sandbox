@@ -6,6 +6,7 @@ import VideoScene from '../Video/VideoScene'
 import MeshPortalScene from '../MeshPortal/MeshPortalScene'
 import WallClippingScene from '../WallClipping/WallClippingScene'
 import FpsScene from '../Fps/FpsScene'
+import ParticleScene from '../Particle/ParticleScene'
 
 import Camera from './Camera'
 import Environments from './Environments'
@@ -23,6 +24,7 @@ export default function Scene({ page }) {
       { page == "meshportal" && <MeshPortalScene /> }
       { page == "wallclipping" && <WallClippingScene /> }
       { page == "fps" && <FpsScene /> }
+      { page == "particle" && <ParticleScene /> }
     </>
   )
 }
