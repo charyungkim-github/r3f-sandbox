@@ -7,6 +7,7 @@ import gsap from 'gsap'
 import './shaders/ParticleMaterial'
 
 export default function MorphingParticle() {
+
   const options = useControls('particle', {
     colorA: '#ff7300',
     colorB: '#0091ff',
@@ -90,6 +91,7 @@ export default function MorphingParticle() {
 }
 
 function getParticles(scene) {
+
   const modelPositions = scene.map( child => child.geometry.attributes.position )
   const maxCount = Math.max(...modelPositions.map( position => position.count ))
 
