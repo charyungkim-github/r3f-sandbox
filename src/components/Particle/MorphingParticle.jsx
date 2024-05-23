@@ -4,8 +4,6 @@ import { AdditiveBlending, BufferAttribute, Color, Float32BufferAttribute, Vecto
 import { button, useControls } from 'leva'
 import gsap from 'gsap'
 
-import './shaders/ParticleMaterial'
-
 export default function MorphingParticle() {
 
   const options = useControls('particle', {
@@ -82,9 +80,9 @@ export default function MorphingParticle() {
 
   return(
     <>
-      <points frustumCulled={false} scale={5}>
+      <points frustumCulled={false}>
         <bufferGeometry ref={geometryRef} attach='geometry' />
-        <particleMaterial ref={materialRef} blending={AdditiveBlending} depthWrite={false} {...config} />
+        <morphingParticleMaterial ref={materialRef} blending={AdditiveBlending} depthWrite={false} {...config} />
       </points>
     </>
   )

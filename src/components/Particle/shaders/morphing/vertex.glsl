@@ -11,8 +11,7 @@ varying vec3 vColor;
 
 #include ./simplexNoise3d.glsl
 
-void main()
-{
+void main() {
   // Mixed position
   float noiseOrigin = simplexNoise3d(position * 0.2);
   float noiseTarget = simplexNoise3d(aPositionTarget * 0.2);

@@ -1,11 +1,15 @@
 import { Environment, OrbitControls, PerspectiveCamera } from "@react-three/drei"
 
 import MorphingParticle from "./MorphingParticle"
+import FloatingParticle from "./FloatingParticle"
+
+import './shaders/ParticleMaterials'
 
 export default function ParticleScene() {
 
   return (
     <>
+      <FloatingParticle />
       <MorphingParticle />
       <Camera />
       <Environments />
@@ -16,7 +20,7 @@ export default function ParticleScene() {
 function Camera() {
   return(
     <>
-      <PerspectiveCamera makeDefault position={[0, 0, 25]}/>
+      <PerspectiveCamera makeDefault position={[0, 0, 10]}/>
       <OrbitControls />
     </>
   )
