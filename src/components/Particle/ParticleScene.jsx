@@ -1,7 +1,7 @@
 import { Environment, KeyboardControls, OrbitControls, PerspectiveCamera, useGLTF, useKeyboardControls } from "@react-three/drei"
 import { useFrame } from "@react-three/fiber"
 import { useEffect, useRef, useState } from "react"
-import Background from "./Background"
+import MorphingParticle from "./MorphingParticle"
 
 export default function ParticleScene() {
   const keymaps = [
@@ -12,7 +12,7 @@ export default function ParticleScene() {
   return (
     <KeyboardControls map={keymaps}>
 
-      <Background />
+      <MorphingParticle />
       <Camera />
       <Environments />
 
@@ -31,7 +31,7 @@ function Camera() {
 
   return(
     <>
-      <PerspectiveCamera ref={cameraRef} makeDefault position={[0, 0, 15]}/>
+      <PerspectiveCamera ref={cameraRef} makeDefault position={[0, 0, 25]}/>
       <OrbitControls />
       <color args={['#333333']} attach='background'/>
     </>
