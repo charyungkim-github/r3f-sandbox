@@ -10,17 +10,12 @@ export default function MorphingParticle() {
     colorA: '#ff7300',
     colorB: '#0091ff',
     size: 0.4,
-    progress: { value: 0, min: 0, max: 1 },
-    Morph0: button((get) => { updateGeometry(0) }),
-    Morph1: button((get) => { updateGeometry(1) }),
-    Morph2: button((get) => { updateGeometry(2) }),
-    Morph3: button((get) => { updateGeometry(3) }),
   })
 
   const config = {
     uSize: options.size,
     uResolution: new Vector2(500, 500),
-    uProgress: options.progress,
+    uProgress: 0,
     uColorA: new Color(options.colorA),
     uColorB: new Color(options.colorB)
   }

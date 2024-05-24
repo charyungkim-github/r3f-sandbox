@@ -8,8 +8,8 @@ export default function FloatingParticle() {
 
   const options = useControls({
     count: 64,
-    size: 3,
-    color: '#5c84a3',
+    size: 10,
+    color: '#a0a0a0',
     frequency: 0.25
   })
 

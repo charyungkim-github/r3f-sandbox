@@ -14,7 +14,7 @@ void main() {
   gl_Position = projectedPosition;
 
   gl_PointSize = uSize;
-  gl_PointSize *= step(1.0 - (1.0/64.0), position.x) + 0.5;
+  // gl_PointSize *= step(1.0 - (1.0/64.0), position.x) + 0.5;
 
   vColor = uColor;
 }
