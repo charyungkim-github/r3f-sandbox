@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 import { AdditiveBlending, BufferAttribute, Color, Float32BufferAttribute, Vector2 } from 'three'
-import { button, useControls } from 'leva'
+import { useControls } from 'leva'
 import gsap from 'gsap'
 
 export default function MorphingParticle() {

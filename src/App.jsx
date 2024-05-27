@@ -16,6 +16,7 @@ function App() {
           <Route path="/wallclipping" element={<Webgl page="wallclipping" />} />
           <Route path="/fps" element={<Webgl page="fps" />} />
           <Route path="/particle" element={<Webgl page="particle" />} />
+          <Route path="/pathfinding" element={<Webgl page="pathfinding" />} />
         </Routes>
       </Suspense>
     </>
