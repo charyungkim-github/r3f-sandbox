@@ -1,11 +1,12 @@
-import { Environment, OrbitControls, PerspectiveCamera } from "@react-three/drei"
+import { Environment, OrbitControls, PerspectiveCamera, useGLTF } from "@react-three/drei"
 
+import Navmesh from "./Navmesh"
 import Map from "./Map"
 
 export default function PathFindingScene() {
   return(
     <>
-      <Box />
+      <Navmesh />
       <Map />
       <Camera />
       <Environments />
@@ -13,18 +14,10 @@ export default function PathFindingScene() {
   )
 }
 
-function Box() {
-  return(
-    <mesh>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshBasicMaterial color='lightgreen' />
-    </mesh>
-  )
-}
 function Camera() {
   return(
     <>
-      <PerspectiveCamera makeDefault position={[0, 0, 10]}/>
+      <PerspectiveCamera makeDefault position={[-10, 14, 10]}/>
       <OrbitControls />
     </>
   )
@@ -34,8 +27,8 @@ function Environments() {
   return(
     <>
       <Environment preset={'studio'} background={false} blur={10}/>
-      <ambientLight intensity={2} />
-      <directionalLight position={[0,20,30]} />
+      <ambientLight intensity={1} />
+      <directionalLight intensity={10} castShadow position={[0,20,30]} />
       <color args={['#333333']} attach='background'/>
     </>
   )
