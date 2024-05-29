@@ -26,9 +26,9 @@ function Camera() {
 function Environments() {
   return(
     <>
-      <Environment preset={'studio'} background={false} blur={10}/>
+      <Environment preset={'city'} background={true} blur={10}/>
       <ambientLight intensity={1} />
-      <directionalLight intensity={10} castShadow position={[0,20,30]} />
+      <directionalLight intensity={1} castShadow position={[0,20,30]} />
       <color args={['#333333']} attach='background'/>
     </>
   )

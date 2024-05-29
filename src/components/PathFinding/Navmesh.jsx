@@ -1,131 +1,93 @@
-import { useGLTF } from '@react-three/drei'
-import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
-import { Vector3 } from 'three'
-import { Pathfinding, PathfindingHelper } from 'three-pathfinding'
+import { useFrame } from '@react-three/fiber'
+import { Pathfinding } from 'three-pathfinding'
+import { MathUtils, Vector3 } from 'three'
 
-const ZONE = 'level'
-const SPEED = 5
-const playerPosition = new Vector3( -3.5, 0.5, 5.5 )
-const targetPosition = new Vector3()
+import NavmeshModel from './NavmeshModel'
+import PlayerModel from './PlayerModel'
+
+const moveSpeed = 1
+const rotationSpeed = 0.1
+const playerPosition = new Vector3(-3.5, 0.5, 5.5)
+const upVector = new Vector3(0, 1, 0)
+const rightUpVector = new Vector3(1, 1, 0)
 
 export default function Navmesh() {
-  return(
-    <>
-      <Nav />
-    </>
-  )
-}
 
-function Nav() {
-
-  const { nodes } = useGLTF('/models/level-nav.glb')
-  const { scene } = useThree()
-
-  const navmesh = useRef()
   const pathfinding = useRef()
-  const pathfindingHelper = useRef()
-  const groupID = useRef()
   const path = useRef()
+  const navmeshRef = useRef()
+  const playerRef = useRef()
+  const targetAngle = useRef(Math.PI)
 
   useEffect(()=>{
+    // init pathfinding
+    const zone = Pathfinding.createZone(navmeshRef.current.geometry)
     pathfinding.current = new Pathfinding()
-    const zone = Pathfinding.createZone(navmesh.current.geometry)
-    pathfinding.current.setZoneData( ZONE, zone )
-    groupID.current = pathfinding.current.getGroup( ZONE, playerPosition )
+    pathfinding.current.setZoneData( '', zone )
 
-    pathfindingHelper.current = new PathfindingHelper()
-    pathfindingHelper.current.setPlayerPosition( playerPosition )
-    pathfindingHelper.current.setTargetPosition( playerPosition )
-    scene.add(pathfindingHelper.current)
+    // init player
+    teleport(playerPosition)
   }, [])
 
   useFrame((state, delta)=>{
-    if ( !navmesh.current || !(path.current||[]).length ) return
 
-    let targetPosition = path.current[ 0 ]
-    const velocity = targetPosition.clone().sub( playerPosition )
+    if (!navmeshRef.current || !path.current || path.current.length == 0) return
 
-    if (velocity.lengthSq() > 0.05 * 0.05) {
-      velocity.normalize()
-      // Move player to target
-      playerPosition.add( velocity.multiplyScalar( delta * SPEED ) )
-      pathfindingHelper.current.setPlayerPosition( playerPosition )
-    } else {
-      // Remove node from the path we calculated
+    const velocity = path.current[0].clone().sub(playerPosition)
+
+    // move player
+    if (velocity.lengthSq() > 0.02) {
+      // move player
+      playerPosition.add(velocity.normalize().multiplyScalar(delta * moveSpeed))
+      playerRef.current.position.copy(playerPosition)
+
+      // rotate player
+      targetAngle.current = getTargetAngle(velocity, targetAngle.current, rotationSpeed)
+      playerRef.current.setRotationFromAxisAngle(upVector, targetAngle.current)
+
+      // play animation
+      playerRef.current.play('run')
+    }
+    // remove node from the path player passed
+    else {
       path.current.shift()
+      playerRef.current.play('idle')
     }
   })
 
-  function onPointerUp(event) {
+  function findPath(targetPosition) {
+    path.current = pathfinding.current.findPath(playerPosition, targetPosition, '', 0)
+  }
 
-    targetPosition.copy(event.point)
+  function teleport(targetPosition) {
+    // clear path
+    path.current = null
 
-    pathfindingHelper.current.reset().setPlayerPosition(playerPosition)
+    // move player
+    playerPosition.copy(targetPosition)
+    playerRef.current.position.copy(playerPosition)
 
-    // Teleport on ctrl/cmd click or RMB.
-    if (event.metaKey || event.ctrlKey || event.button === 2) {
-      path.current = null
-      groupID.current = pathfinding.current.getGroup(ZONE, targetPosition, true)
-      const closestNode = pathfinding.current.getClosestNode(
-        playerPosition,
-        ZONE,
-        groupID.current,
-        true
-      )
+    // rotate player
+    const direction = playerPosition.clone().multiply(rightUpVector).sub(playerPosition)
+    const angle = Math.atan2(direction.x, direction.z)
+    playerRef.current.setRotationFromAxisAngle(upVector, angle)
 
-      pathfindingHelper.current.setPlayerPosition(playerPosition.copy(targetPosition))
-      if (closestNode) pathfindingHelper.current.setNodePosition(closestNode.centroid)
-      return
-    }
-
-    const targetGroupID = pathfinding.current.getGroup(ZONE, targetPosition, true)
-    const closestTargetNode = pathfinding.current.getClosestNode(
-      targetPosition,
-      ZONE,
-      targetGroupID,
-      true
-    )
-
-    pathfindingHelper.current.setTargetPosition(targetPosition)
-    if (closestTargetNode) pathfindingHelper.current.setNodePosition(closestTargetNode.centroid)
-
-    // Calculate a path to the target and store it
-    path.current = pathfinding.current.findPath(playerPosition, targetPosition, ZONE, groupID.current)
-
-    if (path.current && path.current.length) {
-      pathfindingHelper.current.setPath(path.current)
-    } else {
-      const closestPlayerNode = pathfinding.current.getClosestNode(
-        playerPosition,
-        ZONE,
-        groupID.current
-      )
-      const clamped = new Vector3()
-
-      // TODO(donmccurdy): Don't clone targetPosition, fix the bug.
-      pathfinding.current.clampStep(
-        playerPosition,
-        targetPosition.clone(),
-        closestPlayerNode,
-        ZONE,
-        groupID.current,
-        clamped
-      )
-
-      pathfindingHelper.current.setStepPosition(clamped)
-    }
+    // play animation
+    playerRef.current.play('idle')
   }
 
   return(
     <>
-      <group dispose={null}>
-        <mesh ref={navmesh} geometry={nodes.Navmesh_Mesh.geometry} onPointerUp={onPointerUp}>
-          <meshBasicMaterial color='#ffffff' opacity={0.75} transparent={true} />
-        </mesh>
-      </group>
+      <NavmeshModel ref={navmeshRef} onClick={(e)=>findPath(e.point)} onContextMenu={(e)=>teleport(e.point)}/>
+      <PlayerModel ref={playerRef} scale={5} />
     </>
   )
 }
 
-useGLTF.preload("/models/level-nav.glb")
+function getTargetAngle(velocity, prevAngle, speed) {
+  const angle =  Math.atan2(velocity.x, velocity.z)
+  const deltaAngle = angle - prevAngle
+  const wrapAngle = deltaAngle - Math.PI * 2 * Math.floor((deltaAngle + Math.PI) / (Math.PI * 2))
+  return MathUtils.lerp(prevAngle, prevAngle + wrapAngle, speed)
+}
