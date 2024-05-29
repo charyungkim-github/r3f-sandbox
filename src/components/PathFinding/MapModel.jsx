@@ -1,8 +1,8 @@
 import { useGLTF } from "@react-three/drei"
 
-export default function Map(props) {
+export default function MapModel(props) {
 
-  const { nodes, materials } = useGLTF('/models/level.glb')
+  const { nodes } = useGLTF('/models/level.glb')
 
   return(
     <>

@@ -11,14 +11,14 @@ const rotationSpeed = 0.1
 const playerPosition = new Vector3(-3.5, 0.5, 5.5)
 const upVector = new Vector3(0, 1, 0)
 const rightUpVector = new Vector3(1, 1, 0)
+let targetAngle = Math.PI
 
-export default function Navmesh() {
+export default function PathFindingController() {
 
   const pathfinding = useRef()
   const path = useRef()
   const navmeshRef = useRef()
   const playerRef = useRef()
-  const targetAngle = useRef(Math.PI)
 
   useEffect(()=>{
     // init pathfinding
@@ -36,22 +36,23 @@ export default function Navmesh() {
 
     const velocity = path.current[0].clone().sub(playerPosition)
 
-    // move player
     if (velocity.lengthSq() > 0.02) {
       // move player
       playerPosition.add(velocity.normalize().multiplyScalar(delta * moveSpeed))
       playerRef.current.position.copy(playerPosition)
 
       // rotate player
-      targetAngle.current = getTargetAngle(velocity, targetAngle.current, rotationSpeed)
-      playerRef.current.setRotationFromAxisAngle(upVector, targetAngle.current)
+      targetAngle = getTargetAngle(velocity, targetAngle, rotationSpeed)
+      playerRef.current.setRotationFromAxisAngle(upVector, targetAngle)
 
       // play animation
       playerRef.current.play('run')
     }
-    // remove node from the path player passed
     else {
+      // remove node from the path player passed
       path.current.shift()
+
+      // play animation
       playerRef.current.play('idle')
     }
   })

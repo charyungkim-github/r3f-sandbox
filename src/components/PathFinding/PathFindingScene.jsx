@@ -1,13 +1,13 @@
 import { Environment, OrbitControls, PerspectiveCamera, useGLTF } from "@react-three/drei"
 
-import Navmesh from "./Navmesh"
-import Map from "./Map"
+import PathFindingController from "./PathFindingController"
+import MapModel from "./MapModel"
 
 export default function PathFindingScene() {
   return(
     <>
-      <Navmesh />
-      <Map />
+      <PathFindingController />
+      <MapModel />
       <Camera />
       <Environments />
     </>
