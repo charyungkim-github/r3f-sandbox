@@ -9,29 +9,32 @@ const PlayerModel = forwardRef((props, ref) => {
   const currentAction = useRef('')
 
   useEffect(()=>{
-    ref.current.play = (action) => {
-      if(action == 'run') {
-        if(currentAction.current == 'run') return
-        actions["Main_Idle"].fadeOut(0.2)
-        actions["Main_Run"].reset().fadeIn(0.2).play()
-        currentAction.current = 'run'
-      }
-      else if(action == 'idle') {
-        if(currentAction.current == 'idle') return
-        actions["Main_Run"].fadeOut(0.2)
-        actions["Main_Idle"].reset().fadeIn(0.2).play()
-        currentAction.current = 'idle'
-      }
-    }
-
-    // init animation
     actions["Main_Run"].timeScale = 1.2
-
-    return () => currentAction.current = ''
+    play('idle')
+    return () => {
+      actions["Main_Run"].stop()
+      actions["Main_Idle"].stop()
+      currentAction.current = ''
+    }
   }, [])
 
+  const play = (action) => {
+    if(action == 'run') {
+      if(currentAction.current == 'run') return
+      actions["Main_Idle"].fadeOut(0.2)
+      actions["Main_Run"].reset().fadeIn(0.2).play()
+      currentAction.current = 'run'
+    }
+    else if(action == 'idle') {
+      if(currentAction.current == 'idle') return
+      actions["Main_Run"].fadeOut(0.2)
+      actions["Main_Idle"].reset().fadeIn(0.2).play()
+      currentAction.current = 'idle'
+    }
+  }
+
   return(
-    <group ref={ref} {...props} dispose={null} >
+    <group ref={ref} {...props} dispose={null} play={play} >
       <group name="Scene">
         <group name="Armature" rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
           <primitive object={nodes.mixamorigHips} />
