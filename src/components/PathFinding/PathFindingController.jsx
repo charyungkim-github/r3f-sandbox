@@ -5,6 +5,7 @@ import { MathUtils, Vector3 } from 'three'
 
 import NavmeshModel from './NavmeshModel'
 import PlayerModel from './PlayerModel'
+import IndicatorModel from './IndicatorModel'
 
 const moveSpeed = 1
 const rotationSpeed = 0.1
@@ -19,6 +20,7 @@ export default function PathFindingController() {
   const path = useRef()
   const navmeshRef = useRef()
   const playerRef = useRef()
+  const indicatorRef = useRef()
 
   useEffect(()=>{
     // init pathfinding
@@ -37,58 +39,63 @@ export default function PathFindingController() {
     const velocity = path.current[0].clone().sub(playerPosition)
 
     if (velocity.lengthSq() > 0.02) {
-      // move player
       playerPosition.add(velocity.normalize().multiplyScalar(delta * moveSpeed))
-      playerRef.current.position.copy(playerPosition)
-
-      // rotate player
-      targetAngle = getTargetAngle(velocity, targetAngle, rotationSpeed)
-      playerRef.current.setRotationFromAxisAngle(upVector, targetAngle)
-
-      // play animation
-      playerRef.current.play('run')
+      targetAngle = getLerpAngle(velocity, targetAngle, rotationSpeed)
+      updatePlayer()
     }
     else {
       // remove node from the path player passed
       path.current.shift()
-
-      // play animation
-      playerRef.current.play('idle')
+      if(path.current.length == 0) reset()
     }
   })
 
+  function updatePlayer() {
+    playerRef.current.position.copy(playerPosition)
+    playerRef.current.setRotationFromAxisAngle(upVector, targetAngle)
+    playerRef.current.play('run')
+  }
+
+  function reset() {
+    playerRef.current.play('idle')
+    path.current = null
+    indicatorRef.current.visible = false
+  }
+
   function findPath(targetPosition) {
+    // calculate path
     path.current = pathfinding.current.findPath(playerPosition, targetPosition, '', 0)
+
+    // show indicator
+    indicatorRef.current.moveTo(targetPosition)
   }
 
   function teleport(targetPosition) {
-    // clear path
-    path.current = null
-
-    // move player
     playerPosition.copy(targetPosition)
-    playerRef.current.position.copy(playerPosition)
+    targetAngle = getLookatAngle(playerPosition)
+    updatePlayer()
 
-    // rotate player
-    const direction = playerPosition.clone().multiply(rightUpVector).sub(playerPosition)
-    const angle = Math.atan2(direction.x, direction.z)
-    playerRef.current.setRotationFromAxisAngle(upVector, angle)
-
-    // play animation
-    playerRef.current.play('idle')
+    // reset
+    reset()
   }
 
   return(
     <>
       <NavmeshModel ref={navmeshRef} onClick={(e)=>findPath(e.point)} onContextMenu={(e)=>teleport(e.point)}/>
       <PlayerModel ref={playerRef} scale={5} />
+      <IndicatorModel ref={indicatorRef} />
     </>
   )
 }
 
-function getTargetAngle(velocity, prevAngle, speed) {
+function getLerpAngle(velocity, prevAngle, speed) {
   const angle =  Math.atan2(velocity.x, velocity.z)
   const deltaAngle = angle - prevAngle
   const wrapAngle = deltaAngle - Math.PI * 2 * Math.floor((deltaAngle + Math.PI) / (Math.PI * 2))
   return MathUtils.lerp(prevAngle, prevAngle + wrapAngle, speed)
+}
+
+function getLookatAngle(position) {
+  const direction = position.clone().multiply(rightUpVector).sub(position)
+  return Math.atan2(direction.x, direction.z)
 }
