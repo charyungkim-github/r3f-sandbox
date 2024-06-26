@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react"
+
 import './deviceOrientation.scss'
 
 export default function DeviceOrientationScene() {
+
+  // TODO :: catch error when device does not support orientation
+  // TOOD :: add matter js
 
   const [orientation, setOrientation] = useState({ alpha: 0, beta: 0, gamma: 0 })
 
