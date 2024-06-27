@@ -15,6 +15,7 @@ import PathFindingScene from "../PathFinding/PathFindingScene"
 
 import Camera from "./Camera"
 import Environments from "./Environments"
+import TheatrejsScene from "../Theatrejs/TheatrejsScene"
 
 export default function Webgl({ page }) {
   return (
@@ -31,9 +32,10 @@ export default function Webgl({ page }) {
           { page == "fps" && <FpsScene /> }
           { page == "particle" && <ParticleScene /> }
           { page == "pathfinding" && <PathFindingScene /> }
+          { page == "theatrejs" && <TheatrejsScene /> }
 
           {/* defaults */}
-          <Perf position={"top-left"} />
+          {/* <Perf position={"top-left"} /> */}
           <Camera page={page} />
           <Environments page={page} />
           <Preload all />

@@ -2,7 +2,7 @@ import { create } from 'zustand'
 
 export default create((set, get) => ({
   camera: {
-    position: [5, 6, 6],
+    position: [10, 5, 12],
   },
   environments: {
     dirPosition: [-10, 20, 5],

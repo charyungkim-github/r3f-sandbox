@@ -7,10 +7,15 @@ import MeshPortalInspector from "./MeshPortalInspector"
 import useMeshPortalStore from "./stores/useMeshPortalStore"
 
 export default function MeshPortalScene() {
+  const meshRef = useRef()
+
+  useFrame(() => {
+    meshRef.current.rotation.y -= 0.003
+  })
 
   return (
     <>
-      <mesh scale={1.5}>
+      <mesh ref={meshRef} scale={1.5}>
         <boxGeometry args={[2, 2, 2]} />
         <Side rotation={[0, 0, 0]} bg="orange" index={0}>
           <torusGeometry args={[0.65, 0.3, 64]} />

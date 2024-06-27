@@ -12,7 +12,7 @@ function App() {
       <Suspense fallback={null}>
         <Routes>
           {/* webgl */}
-          <Route path="/" element={<Webgl page="splatting" />} />
+          <Route path="/splatting" element={<Webgl page="splatting" />} />
           <Route path="/navigation" element={<Webgl page="navigation" />} />
           <Route path="/video" element={<Webgl page="video" />} />
           <Route path="/meshportal" element={<Webgl page="meshportal" />} />
@@ -20,8 +20,10 @@ function App() {
           <Route path="/fps" element={<Webgl page="fps" />} />
           <Route path="/particle" element={<Webgl page="particle" />} />
           <Route path="/pathfinding" element={<Webgl page="pathfinding" />} />
+          <Route path="/theatrejs" element={<Webgl page="theatrejs" />} />
 
           {/* ui */}
+          <Route path="/" element={<UI page="home" />} />
           <Route path="/matterjs" element={<UI page="matterjs" />} />
         </Routes>
       </Suspense>

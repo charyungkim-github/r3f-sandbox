@@ -1,12 +1,11 @@
 import { useEffect, useRef } from "react"
-import Matter, { Engine, Render, Runner, World, Bodies } from "matter-js"
+import { Engine, Render, Runner, World, Bodies } from "matter-js"
 
-export default function Demo() {
+export default function Demo({ orientation }) {
+
   const containerRef = useRef()
   const canvasRef = useRef()
-  const rectRef = useRef()
-  const clicked = useRef(false)
-  const mouseConfig = { x: 0, angle: 0, speed: 0.01 }
+  const engineRef = useRef()
 
   useEffect(() => {
     const debug = false
@@ -28,46 +27,23 @@ export default function Demo() {
 
     const mapColliders = getMapCollider(screen, 50, debug)
 
-    const ball = Bodies.circle(400, 100, 40, {
+    const ball = Bodies.circle(screen.width/2, screen.height/2, 40, {
       restitution: 0.9,
       render: { fillStyle: "#006400" },
     })
 
-    const rect = Bodies.rectangle(800, 600, 300, 40, {
-      isStatic: true,
-      render: { fillStyle: "#006400" },
-    })
-    rectRef.current = rect
-
-    World.add(engine.world, [...mapColliders, rect, ball])
+    World.add(engine.world, [...mapColliders, ball])
     Render.run(render)
     Runner.run(runner, engine)
+
+    engineRef.current = engine
   }, [])
-
-  function onMouseMove(e) {
-
-    if(!clicked.current) return
-
-    const rect = containerRef.current.getBoundingClientRect()
-    const centerX = rect.left + rect.width / 2
-    const dx = e.clientX - centerX
-    const x = (dx - mouseConfig.x) * mouseConfig.speed
-
-    mouseConfig.x = dx
-    mouseConfig.angle += x
-    Matter.Body.setAngle(rectRef.current, mouseConfig.angle)
-  }
 
   useEffect(() => {
-    document.addEventListener("mousemove", onMouseMove)
-    document.addEventListener("mousedown", ()=>clicked.current = true)
-    document.addEventListener("mouseup", ()=>clicked.current = false)
-    return () => {
-      document.removeEventListener("mousemove", onMouseMove)
-      document.removeEventListener("mousedown", ()=>clicked.current = true)
-      document.removeEventListener("mouseup", ()=>clicked.current = false)
-    }
-  }, [])
+    const multiplier = 0.02
+      engineRef.current.world.gravity.y = orientation.beta * multiplier
+      engineRef.current.world.gravity.x = orientation.gamma * multiplier
+  }, [orientation])
 
   return (
     <>
@@ -85,6 +61,13 @@ function getMapCollider(screen, size, debug = false) {
   const floorConfig = {
     x: 0,
     y: screen.height - size / 2,
+    w: screen.width * 2,
+    h: size,
+  }
+
+  const topConfig = {
+    x: 0,
+    y: size / 2,
     w: screen.width * 2,
     h: size,
   }
@@ -109,6 +92,11 @@ function getMapCollider(screen, size, debug = false) {
     render: { fillStyle: color },
   })
 
+  const top = Bodies.rectangle(topConfig.x, topConfig.y, topConfig.w, topConfig.h, {
+    isStatic: true,
+    render: { fillStyle: color },
+  })
+
   const left = Bodies.rectangle(leftConfig.x, leftConfig.y, leftConfig.w, leftConfig.h, {
     isStatic: true,
     render: { fillStyle: color },
@@ -119,5 +107,5 @@ function getMapCollider(screen, size, debug = false) {
     render: { fillStyle: color },
   })
 
-  return [floor, left, right]
+  return [floor, top, left, right]
 }
