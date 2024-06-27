@@ -1,9 +1,9 @@
-import DeviceOrientationScene from "../DeviceOrientation/DeviceOrientationScene"
+import MatterjsScene from "../Matterjs/MatterjsScene"
 
 export default function UI({ page }) {
   return (
     <>
-      { page == "device-orientation" && <DeviceOrientationScene /> }
+      { page == "matterjs" && <MatterjsScene /> }
     </>
   )
 }

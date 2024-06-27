@@ -22,7 +22,7 @@ function App() {
           <Route path="/pathfinding" element={<Webgl page="pathfinding" />} />
 
           {/* ui */}
-          <Route path="/device-orientation" element={<UI page="device-orientation" />} />
+          <Route path="/matterjs" element={<UI page="matterjs" />} />
         </Routes>
       </Suspense>
     </>
