@@ -19,7 +19,7 @@ export default function TheatrejsSceneWrapper() {
   enableEditor && useTheatrejsEditor()
 
   // create sheet
-  const { sheet } = createSheet("Project", "Sheet_01", projectState)
+  const { sheet } = createSheet("Project", "Sheet_01", enableEditor ? null : projectState)
 
   // regiester key events
   useEffect(() => {
