@@ -1,23 +1,24 @@
 import { useEffect } from "react"
-import { getProject } from "@theatre/core"
+import { getProject, val } from "@theatre/core"
 
-export function useRegisterTheatrejs(projectName, sheetName, state = null) {
+export function useTheatrejsEditor() {
 
-  // import theatrejs
-  useEffect(() => { initializeTheatrejs() }, [])
+  async function initializeTheatrejsEditor() {
+    const studio = await import("@theatre/studio")
+    studio.default.initialize()
+    const extension = await import("@theatre/r3f/dist/extension")
+    studio.default.extend(extension.default)
+  }
 
-  // create sheet
-  const sheet = getProject(projectName, { state }).sheet(sheetName)
-  const length = state?.sheetsById[sheetName].sequence.length
-  return { sheet, length }
+  useEffect(() => { initializeTheatrejsEditor() }, [])
+
+  return null
 }
 
-async function initializeTheatrejs() {
-  const studio = await import("@theatre/studio")
-  studio.default.initialize()
-
-  const extension = await import("@theatre/r3f/dist/extension")
-  studio.default.extend(extension.default)
+export function createSheet(projectName, sheetName, state = null) {
+  const sheet = getProject(projectName, { state }).sheet(sheetName)
+  const length = val(sheet.sequence.pointer.length)
+  return { sheet, length }
 }
 
 export function playAnimation(sheet, count, range) {
