@@ -12,14 +12,14 @@ import projectState from "./Project.theatre-project-state.json"
 
 export default function TheatrejsSceneWrapper() {
 
-  const enableEditor = false
+  const enableEditor = true
   const enableKeyEvents = false
 
   // register threatrejs
   enableEditor && useTheatrejsEditor()
 
   // create sheet
-  const { sheet } = createSheet("Project", "Sheet_01", enableEditor ? null : projectState)
+  const { sheet } = createSheet("Project", "Sheet_01", projectState)
 
   // regiester key events
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function TheatrejsSceneWrapper() {
 
   return (
     <>
-      <ScrollControls pages={5}>
+      <ScrollControls pages={5} damping={0.15}>
         <SheetProvider sheet={sheet}>
           <TheatrejsScene />
         </SheetProvider>
