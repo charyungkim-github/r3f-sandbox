@@ -20,7 +20,7 @@ import TheatrejsScene from "../Theatrejs/TheatrejsScene"
 export default function Webgl({ page }) {
   return (
     <div className="glContainer">
-      <Canvas dpr={[1, 1.5]} gl={{ alpha: true, toneMappingExposure: 1.0, toneMapping: ACESFilmicToneMapping }} shadows>
+      <Canvas dpr={[1, 1.5]} gl={{ alpha: true, toneMappingExposure: 1.0, toneMapping: ACESFilmicToneMapping, preserveDrawingBuffer: true }} shadows>
         <Suspense fallback={null}>
 
           {/* scenes */}

@@ -4,9 +4,15 @@ import Demo from "./Demo"
 import './matterjs.scss'
 
 /*
-Make sure in the vite.config.js plugins setup for the https.
-https required for device orientation.
-// plugins: [react(),  glsl(), basicSsl()],
+  Make sure in the vite.config.js plugins setup for the https.
+  https required for device orientation.
+  // plugins: [react(),  glsl(), basicSsl()],
+*/
+
+/*
+  Device Inspector on Chrome
+  to simulate device orientation,
+  menu > more tools > sensors > "Orientation"
 */
 
 export default function MatterjsScene() {
