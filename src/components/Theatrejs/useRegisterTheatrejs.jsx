@@ -3,8 +3,8 @@ import { getProject } from "@theatre/core"
 
 export function useRegisterTheatrejs(projectName, sheetName, state = null) {
 
-  // import TheatreJS
-  useEffect(() => { initializeTheatre() }, [])
+  // import theatrejs
+  useEffect(() => { initializeTheatrejs() }, [])
 
   // create sheet
   const sheet = getProject(projectName, { state }).sheet(sheetName)
@@ -12,7 +12,7 @@ export function useRegisterTheatrejs(projectName, sheetName, state = null) {
   return { sheet, length }
 }
 
-async function initializeTheatre() {
+async function initializeTheatrejs() {
   const studio = await import("@theatre/studio")
   studio.default.initialize()
 
